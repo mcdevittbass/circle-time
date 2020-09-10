@@ -1,31 +1,11 @@
 import React, { useState } from 'react';
-import Konva from 'konva';
 import { Stage, Layer, Circle, Text, Group, Star } from 'react-konva';
+import Konva from 'konva';
 
 let centerX = window.innerWidth/2;
 let centerY = window.innerHeight/2;
-console.log(centerX, centerY);
 
-function generateItems() {
-  const names = ['Betsy', 'Megan', 'John']
-  const circles = [];
-  const length = names.length;
-  for (let i = 0; i < length; i++) {
-    let angle = (i/length)*Math.PI*2;
-    let radius = 260;
-    circles.push({
-      x: (Math.cos(angle)*radius) + centerX,
-      y: (Math.sin(angle)*radius) + centerY,
-      id: 'node-' + i,
-      color: Konva.Util.getRandomColor(),
-      text: names[i]
-    });
-  }
-  return circles;
-}
-
-const Circles = () => {
-  const [items, setItems] = useState(generateItems());
+const Circles = ({ items, setItems, keywords }) => {
 
   const handleDragStart = e => {
     const id = e.target.name();
@@ -80,11 +60,23 @@ const Circles = () => {
                     </Group>
                 ))}
             </Group>
+            {keywords.map(word => (
+              <Text 
+              text={word}
+              fontFamily='Helvetica'
+              fontSize={16}
+              fill={Konva.Util.getRandomColor()}
+              draggable 
+              x={Math.random() * (centerX + 200)}
+              y={Math.random() * (centerY + 100)}
+              />
+            )
+            )}  
         </Layer>
         <Layer>
             <Star 
-            innerRadius={20}
-            outerRadius={40} 
+            innerRadius={10}
+            outerRadius={20} 
             id={'star'} 
             fill="#89b717" 
             x={centerX} 
