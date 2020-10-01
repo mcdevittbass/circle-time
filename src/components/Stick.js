@@ -13,21 +13,23 @@ const Stick = (props) => {
     if(props.items.length) {
       return (
         <Layer>
-          {/* <Image 
-              image={image} 
-              draggable
-              x={items[0].x - 40}
-              y={items[0].y + 10} 
-          /> */}
+          <Image 
+            image={image} 
+            draggable
+            width={100}
+            height={100}
+            x={stickCoordX}
+            y={stickCoordY} 
+          />
         
-          <Star 
+          {/*<Star 
             innerRadius={10}
             outerRadius={20} 
             draggable
             id={'star'} 
             fill="#000" 
             x={stickCoordX} 
-            y={stickCoordY}/>
+          y={stickCoordY}/>*/}
         </Layer>
       )
     }

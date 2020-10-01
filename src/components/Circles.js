@@ -1,16 +1,20 @@
 import React, { useEffect, useState} from 'react';
-import { Stage, Layer, Circle, Text, Group, Star } from 'react-konva';
+import { Stage, Layer, Circle, Text, Group, Star, Image } from 'react-konva';
 import Konva from 'konva';
 import Stick from './Stick';
+import plate from '../img/center-plate.png'; 
 
 let centerX = window.innerWidth/2;
 let centerY = window.innerHeight/2;
 
-const Circles = ({ items, setItems, keywords }) => {
+const Circles = ({ items, setItems }) => {
   const [itemIndex, setItemIndex] = useState(0);
+  const plateImg = new window.Image();
+  plateImg.src = plate;
 
   useEffect(() => {
     //useEffect fires after component mounts or updates
+    console.log(plate);
     window.addEventListener('keyup', handleKeyUp);
     return () => {
       //returning callback means this function will run when the component unmounts or updates
@@ -64,57 +68,62 @@ const Circles = ({ items, setItems, keywords }) => {
   };
 
     return (
-      <Stage width={window.innerWidth} height={window.innerHeight}>
-        
-        <Layer>
-                {items.map(item => (
-                    <Group 
-                    draggable
-                    x={item.x}
-                    y={item.y}
-                    key={item.key}>
-                        <Circle
-                        name={item.id}
-                        fill={item.color}
-                        radius={item.radius}
-                        onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}
-                        />
-                        <Text 
-                        text={item.text}
-                        fontFamily='Helvetica'
-                        fontSize={16}
-                        fill='#FFF'
-                        offsetX={24}
-                        offsetY={6}
-                        />
-                    </Group>
-                ))}
-            {keywords.map((word, i) => (
-              <Text 
-                text={word}
-                fontFamily='Helvetica'
-                fontSize={24}
-                fill={Konva.Util.getRandomColor()}
-                draggable 
-                x={Math.random() * (centerX + 200)}
-                y={Math.random() * (centerY - 100)}
-                key={i}
-              />
-            )
-            )}  
-        </Layer>
-        <Layer>
-            <Star 
-              innerRadius={10}
-              outerRadius={20} 
-              id={'star'} 
-              fill="#89b717" 
-              x={centerX} 
-              y={centerY}/>
-        </Layer>
-        <Stick items={items} itemIndex={itemIndex} handleDragStart={handleDragStart} handleDragEnd={handleDragEnd}/>
-      </Stage>
+        <Stage width={window.innerWidth} height={window.innerHeight}> 
+          <Layer>
+              <Image 
+                //innerRadius={10}
+                //outerRadius={20} 
+                image={plateImg}
+                visible
+                id={'plate'} 
+                width={200}
+                height={200}
+                x={centerX} 
+                y={centerY}
+                offsetX={100}
+                offsetY={100}
+                />
+          </Layer>
+          <Layer>
+                  {items.map(item => (
+                      <Group 
+                      draggable
+                      x={item.x}
+                      y={item.y}
+                      key={item.key}>
+                          <Circle
+                          name={item.id}
+                          fill={item.color}
+                          radius={item.radius}
+                          onDragStart={handleDragStart}
+                          onDragEnd={handleDragEnd}
+                          />
+                          <Text 
+                          text={item.text}
+                          fontFamily='Helvetica'
+                          fontSize={16}
+                          fill='#FFF'
+                          offsetX={24}
+                          offsetY={6}
+                          />
+                      </Group>
+                  ))}
+              {items.map((item, i) => (
+                <Text 
+                  text={item.keyword}
+                  fontFamily='Helvetica'
+                  fontSize={24}
+                  fill={item.color}
+                  draggable 
+                  x={item.keywordX}
+                  y={item.keywordY}
+                  key={i}
+                />
+              )
+              )}  
+          </Layer>
+          <Stick items={items} itemIndex={itemIndex}/>
+        </Stage>
     );
 }
 
