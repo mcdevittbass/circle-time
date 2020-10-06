@@ -9,6 +9,7 @@
     "bootstrap": "^4.5.2",
     "konva": "^7.0.6",
     "react": "^16.13.1",
+    "react-db-google-sheets": "^2.1.1",
     "react-dom": "^16.13.1",
     "react-konva": "^16.13.0-6",
     "react-scripts": "3.4.3",

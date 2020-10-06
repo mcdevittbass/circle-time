@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import GoogleSheetsProvider from 'react-db-google-sheets';
 import { Container, Row, Col} from 'reactstrap';
 import Konva from 'konva';
 import './App.css';
 import Circles from './components/Circles';
 import InputFields from './components/Input';
-
-import useImage from 'use-image';
+import Remove from './components/Remove';
 
 //figure out how to re-render on submit
 let centerX = window.innerWidth/2;
@@ -14,16 +14,16 @@ console.log(centerX, centerY);
 
 function App() {
   //develop way to render with empty array
-  const [names, setNames] = useState([]);
+  const [names, setNames] = useState(['Betsy', 'Megan']);
   const [name, setName] = useState(''); //current name
   const [keyword, setKeyword] = useState(''); //current keyword
-  const [keywords, setKeywords] = useState([]);
+  const [keywords, setKeywords] = useState(['Shade', 'Light']);
   const [item, setItem] = useState({});
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(names.map((name, i) => generateItems(name, keywords[i])));
 
   function setPositions(shapeArr) {
     let paramterA = window.innerWidth*0.375;
-    let paramterB = window.innerHeight*0.5;
+    let paramterB = window.innerHeight*0.4;
     const length = shapeArr.length;
     shapeArr.forEach((shape, i) => {
       let angle = (i/length)*Math.PI*2;
@@ -47,6 +47,8 @@ function App() {
     return circle;
   }
 
+  useEffect(() => setPositions(items));
+
   const handleAddName = (newName, newWord) => {
     setName(newName);
     const newNames = [...names, newName];
@@ -65,30 +67,28 @@ function App() {
 
  }
 
-//  const handleAddKeyword = (word) => {
-//     const newWords = [...keywords, word];
-//     setKeywords(newWords);
-
-//  }
-
   return (
-    <Container fluid className='App m-0 p-0' style={{backgroundColor: '#1261a6D0'}}> 
-      <Row>  
-        <Col sm={3}>  
-          <InputFields 
-            name={name} 
-            setName={setName}
-            keyword={keyword}
-            setKeyword={setKeyword}
-            names={names} 
-            keywords={keywords}
-            onNameChange={() => handleAddName(name, keyword)}
-            />
+    <GoogleSheetsProvider>
+      <Container fluid className='App m-0 p-0' style={{backgroundColor: '#69A2B0'}}> 
+        <Row>  
+          <Col>  
+            <InputFields 
+              name={name} 
+              setName={setName}
+              keyword={keyword}
+              setKeyword={setKeyword}
+              names={names} 
+              keywords={keywords}
+              onNameChange={() => handleAddName(name, keyword)}
+              />
           </Col>
-      
-        <Circles items={items} setItems={setItems} /*keywords={keywords}*//>
-      </Row>
-    </Container>
+          <Col>
+            <Remove items={items} setItems={setItems}/>
+          </Col>
+          <Circles items={items} setItems={setItems} /*keywords={keywords}*//>
+        </Row>
+      </Container>
+    </GoogleSheetsProvider>
   );
 }
 

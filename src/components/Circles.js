@@ -2,19 +2,18 @@ import React, { useEffect, useState} from 'react';
 import { Stage, Layer, Circle, Text, Group, Star, Image } from 'react-konva';
 import Konva from 'konva';
 import Stick from './Stick';
-import plate from '../img/center-plate.png'; 
+import plate from '../img/plate2.png'; 
 
 let centerX = window.innerWidth/2;
 let centerY = window.innerHeight/2;
+const plateImg = new window.Image();
+plateImg.src = plate;
 
 const Circles = ({ items, setItems }) => {
   const [itemIndex, setItemIndex] = useState(0);
-  const plateImg = new window.Image();
-  plateImg.src = plate;
 
   useEffect(() => {
     //useEffect fires after component mounts or updates
-    console.log(plate);
     window.addEventListener('keyup', handleKeyUp);
     return () => {
       //returning callback means this function will run when the component unmounts or updates
@@ -71,8 +70,6 @@ const Circles = ({ items, setItems }) => {
         <Stage width={window.innerWidth} height={window.innerHeight}> 
           <Layer>
               <Image 
-                //innerRadius={10}
-                //outerRadius={20} 
                 image={plateImg}
                 visible
                 id={'plate'} 
@@ -122,7 +119,9 @@ const Circles = ({ items, setItems }) => {
               )
               )}  
           </Layer>
-          <Stick items={items} itemIndex={itemIndex}/>
+          <Layer>
+            <Stick items={items} itemIndex={itemIndex}/>
+          </Layer>
         </Stage>
     );
 }

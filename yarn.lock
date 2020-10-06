@@ -8596,6 +8596,13 @@ react-app-polyfill@^1.0.6:
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
 
+react-db-google-sheets@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-db-google-sheets/-/react-db-google-sheets-2.1.1.tgz#6c0c53cac8ae79872e7b5d90c783312692ef0016"
+  integrity sha512-X3nGT8yiPVDUOUepaHCySB1dbNrzHYUPJ9JEY+v5g+XaJj++0HKJFw7+jJQaRFMwrZ7SQQSjc4Jx+pb+7DZuog==
+  dependencies:
+    lodash "^4.17.19"
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"
