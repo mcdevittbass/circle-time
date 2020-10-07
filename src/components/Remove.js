@@ -34,10 +34,10 @@ const Remove = ( { items, setItems }) => {
                 <ModalBody>
                     <Form onSubmit={handleSubmit}>   
                         {items.map(item => (
-                            <Row className='form-group px-5 m-0'>
+                            <Row className='form-group px-5 m-0' key={item.key}>
                                 <FormGroup>
                                     <Label>
-                                        <Input type='checkbox' id={item.key} checked={checkedBoxes.includes(item) ? true : false} onChange={(e) => handleCheck(e, item)}/>
+                                        <Input type='checkbox' checked={checkedBoxes.includes(item) ? true : false} onChange={(e) => handleCheck(e, item)}/>
                                             Name: {item.text}, Keyword: {item.keyword}
                                     </Label>
                                 </FormGroup>

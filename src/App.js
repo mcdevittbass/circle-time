@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import GoogleSheetsProvider from 'react-db-google-sheets';
 import { Container, Row, Col} from 'reactstrap';
 import Konva from 'konva';
 import './App.css';
@@ -14,7 +13,7 @@ console.log(centerX, centerY);
 
 function App() {
   //develop way to render with empty array
-  const [names, setNames] = useState(['Betsy', 'Megan']);
+  const [names, setNames] = useState(['Betsy', 'Megan','John']);
   const [name, setName] = useState(''); //current name
   const [keyword, setKeyword] = useState(''); //current keyword
   const [keywords, setKeywords] = useState(['Shade', 'Light']);
@@ -34,15 +33,12 @@ function App() {
     })
   }
   function generateItems(newName, newKeyword) {
-    //const circles = []; 
-    //circles.push({
     let circle = {
       color: Konva.Util.getRandomColor(),
       text: newName,
       keyword: newKeyword,
       keywordX: Math.random() * (window.innerWidth),
       keywordY: Math.random() * (window.innerHeight)
-    // });
     }
     return circle;
   }
@@ -63,12 +59,8 @@ function App() {
     setPositions(newItemArr);
   }
 
-  const handleRemoveName = (name) => {
-
- }
-
   return (
-    <GoogleSheetsProvider>
+    <>
       <Container fluid className='App m-0 p-0' style={{backgroundColor: '#69A2B0'}}> 
         <Row>  
           <Col>  
@@ -87,8 +79,8 @@ function App() {
           </Col>
           <Circles items={items} setItems={setItems} /*keywords={keywords}*//>
         </Row>
-      </Container>
-    </GoogleSheetsProvider>
+    </Container>
+  </>
   );
 }
 

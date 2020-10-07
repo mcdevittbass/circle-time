@@ -1,35 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Star, Image, Layer } from 'react-konva';
-import lollipop from '../img/lollipop.png';
+import feather from '../img/feather.png';
 
-const image = new window.Image(150, 150);
-    image.src = lollipop;
+const featherImage = new window.Image(150, 150);
+featherImage.src = feather;
 
 const Stick = (props) => {
+  const [isFeatherLoaded, setLoadFeather] = useState(false);
 
-    let stickCoordX = props.items.length ? props.items[props.itemIndex].x - 40 : null;
-    let stickCoordY = props.items.length ? props.items[props.itemIndex].y : null;
+  let stickCoordX = props.items.length ? props.items[props.itemIndex].x - 40 : null;
+  let stickCoordY = props.items.length ? props.items[props.itemIndex].y - 30 : null;
+
+  const handleFeatherLoad = () => {
+    setLoadFeather(true);
+    console.log('feather: ' + isFeatherLoaded);
+  }
+
+  featherImage.onload = handleFeatherLoad;
+
+  return (
+    <>
+      {isFeatherLoaded && (
+        <Image 
+          image={featherImage} 
+          draggable
+          width={100}
+          height={100}
+          x={stickCoordX}
+          y={stickCoordY} 
+        />)
+      }
+    </>
   
-      return (
-          <Image 
-            image={image} 
-            draggable
-            width={100}
-            height={100}
-            x={stickCoordX}
-            y={stickCoordY} 
-          />
-        
-          /*<Star 
-            innerRadius={10}
-            outerRadius={20} 
-            draggable
-            id={'star'} 
-            fill="#000" 
-            x={stickCoordX} 
-          y={stickCoordY}/>*/
-      )
-
+    /*<Star 
+      innerRadius={10}
+      outerRadius={20} 
+      draggable
+      id={'star'} 
+      fill="#000" 
+      x={stickCoordX} 
+      y={stickCoordY}
+      />*/
+    )
   }
 
   export default Stick;

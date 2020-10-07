@@ -6,12 +6,25 @@ import plate from '../img/plate2.png';
 
 let centerX = window.innerWidth/2;
 let centerY = window.innerHeight/2;
-const plateImg = new window.Image();
+
+const plateImg = new window.Image();  
 plateImg.src = plate;
 
 const Circles = ({ items, setItems }) => {
   const [itemIndex, setItemIndex] = useState(0);
+  const [isPlateLoaded, setPlateLoaded] = useState(false);
 
+  const handleImgLoad = () => {
+    setPlateLoaded(true);
+  }
+
+  const handleLoadError = () => {
+    console.log("Failed to load")
+  }
+
+  plateImg.onload = handleImgLoad;
+  plateImg.onerror = handleLoadError;
+  
   useEffect(() => {
     //useEffect fires after component mounts or updates
     window.addEventListener('keyup', handleKeyUp);
@@ -69,6 +82,7 @@ const Circles = ({ items, setItems }) => {
     return (
         <Stage width={window.innerWidth} height={window.innerHeight}> 
           <Layer>
+            {isPlateLoaded && (
               <Image 
                 image={plateImg}
                 visible
@@ -80,6 +94,7 @@ const Circles = ({ items, setItems }) => {
                 offsetX={100}
                 offsetY={100}
                 />
+              )}
           </Layer>
           <Layer>
                   {items.map(item => (
