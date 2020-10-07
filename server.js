@@ -3,11 +3,11 @@ const express = require('express');
 const app = express();
 
 const port = process.env.PORT || 3000;
-const publicPath = path.join(__dirname, 'circle-up','..', 'public');
-app.use(express.static(publicPath));
+const buildPath = path.join(__dirname, 'circle-up','..', 'build');
+app.use(express.static(buildPath));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(publicPath, 'index.html'));
+    res.sendFile(path.join(buildPath, 'index.html'));
  });
 
 app.listen(port, () => {
