@@ -3,10 +3,13 @@ import { Stage, Layer, Circle, Text, Group } from 'react-konva';
 import Stick from './Stick';
 import CenterImage from './CenterImage';
 
-const CircleStage = ({ items, setItems }) => {
+//to do: set up dragging for keywords so that position persists on reload
+
+const CircleStage = ({ items, setItems, wordItems }) => {
   const [itemIndex, setItemIndex] = useState(0);
   
   useEffect(() => {
+    console.log(wordItems)
     //useEffect fires after component mounts or updates
     window.addEventListener('keyup', handleKeyUp);
     return () => {
@@ -66,41 +69,41 @@ const CircleStage = ({ items, setItems }) => {
             <CenterImage />
           </Layer>
           <Layer>
-                  {items.map(item => (
-                      <Group 
-                      draggable
-                      x={item.x}
-                      y={item.y}
-                      key={item.key}>
-                          <Circle
-                          name={item.id}
-                          fill={item.color}
-                          radius={item.radius}
-                          onDragStart={handleDragStart}
-                          onDragEnd={handleDragEnd}
-                          />
-                          <Text 
-                          text={item.text}
-                          fontFamily='Helvetica'
-                          fontSize={16}
-                          fill='#FFF'
-                          offsetX={24}
-                          offsetY={6}
-                          />
-                      </Group>
-                  ))}
-              {items.map((item, i) => (
+              {items.map(item => (
+                  <Group 
+                  draggable
+                  x={item.x}
+                  y={item.y}
+                  key={item.key}>
+                      <Circle
+                      name={item.id}
+                      fill={item.color}
+                      radius={item.radius}
+                      onDragStart={handleDragStart}
+                      onDragEnd={handleDragEnd}
+                      />
+                      <Text 
+                      text={item.text}
+                      fontFamily='Helvetica'
+                      fontSize={16}
+                      fill='#FFF'
+                      offsetX={24}
+                      offsetY={6}
+                      />
+                  </Group>
+              ))}
+              {wordItems.map((wordItem, i) => (
                 <Text 
-                  text={item.keyword}
+                  text={wordItem.text}
                   fontFamily='Helvetica'
                   fontSize={24}
-                  fill={item.color}
+                  fill={wordItem.color}
                   draggable 
-                  x={item.keywordX}
-                  y={item.keywordY}
-                  key={i}
+                  x={wordItem.x}
+                  y={wordItem.y}
+                  key={'wordItem' + i}
                 />
-              )
+                )
               )}  
           </Layer>
           <Layer>

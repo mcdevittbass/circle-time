@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
-import Konva from 'konva';
 import './App.css';
 import CircleStage from './components/Stage';
 import InputFields from './components/Input';
-import Remove from './components/Remove';
+import { RemoveName, RemoveWord } from './components/Remove';
 
-//figure out how to re-render on submit
 let centerX = window.innerWidth/2;
 let centerY = window.innerHeight/2;
-console.log(centerX, centerY);
 
 function App() {
-  const [names, setNames] = useStickyState(['Betsy', 'Megan','John'], 'names');
+  const colorPalette = ['#020887', '#C6EBBE', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
+
+  const [names, setNames] = useStickyState([], 'names');
   const [name, setName] = useStickyState('', 'name'); //current name
   const [keyword, setKeyword] = useStickyState('', 'keyword'); //current keyword
-  const [keywords, setKeywords] = useStickyState(['Shade', 'Light'], 'keywords');
-  const [items, setItems] = useStickyState(names.map((name, i) => generateItems(name, keywords[i])), 'items');
+  const [keywords, setKeywords] = useStickyState([], 'keywords');
+  const [items, setItems] = useStickyState(names.map(name => generateItems(name)), 'items');
+  const [wordItems, setWordItems] = useStickyState(keywords.map(word => generateWordItems(word)), 'keywordItems');
 
-  function setPositions(shapeArr) {
+  function setCirclePositions(shapeArr) {
     let paramterA = window.innerWidth*0.375;
     let paramterB = window.innerHeight*0.4;
     const length = shapeArr.length;
@@ -30,41 +30,59 @@ function App() {
       shape.radius = length < 18 ? 50 : length < 26 ? 40 : 30;
     })
   }
-  function generateItems(newName, newKeyword) {
+
+  function generateItems(newName) {
     let circle = {
-      color: Konva.Util.getRandomColor(),
-      text: newName,
-      keyword: newKeyword,
-      keywordX: Math.random() * (window.innerWidth),
-      keywordY: Math.random() * (window.innerHeight)
+      color: colorPalette[names.length % 8],
+      text: newName
     }
     return circle;
   }
 
-  useEffect(() => setPositions(items));
+  function generateWordItems(newWord) {
+    let word = {
+      color: colorPalette[keywords.length % 8],
+      text: newWord,
+      x: Math.random() * (window.innerWidth),
+      y: Math.random() * (window.innerHeight)
+    }
+    return word;
+  };
 
-  const handleAddName = (newName, newWord) => {
+  useEffect(() => {
+    console.log(keywords)
+    setCirclePositions(items);
+  });
+
+  const handleAddName = (newName) => {
     setName(newName);
     const newNames = [...names, newName];
     setNames(newNames);
-    setKeyword(newWord);
-    const newWords = [...keywords, newWord]
-    setKeywords(newWords);
-    const newItem = generateItems(newName, newWord);
+    const newItem = generateItems(newName);
     const newItemArr = [...items, newItem];
     setItems(newItemArr);
-    setPositions(newItemArr);
+    setCirclePositions(newItemArr);
+  }
+
+  const handleAddWord = (newWord) => {
+    setKeyword(newWord);
+    const newWords = [...keywords, newWord];
+    setKeywords(newWords);
+    const newWordItem = generateWordItems(newWord);
+    const newWordItemArr = [...wordItems, newWordItem];
+    setWordItems(newWordItemArr);
   }
 
   const handleClear = () => {
     setItems([]);
     setNames([]);
     setKeywords([]);
+    setWordItems([]);
   }
 
   return (
     <>
-      <Container fluid className='App m-0 p-0' style={{backgroundColor: '#69A2B080'}}> 
+      <Container fluid className='App m-0 p-0' style={{backgroundColor: '#fff'}}> 
         <Row>  
           <Col>  
             <InputFields 
@@ -74,16 +92,20 @@ function App() {
               setKeyword={setKeyword}
               names={names} 
               keywords={keywords}
-              onNameChange={() => handleAddName(name, keyword)}
+              onNameChange={() => handleAddName(name)}
+              onWordChange={() => handleAddWord(keyword)}
               />
           </Col>
           <Col>
-            <Button color='warning' className='m-2' onClick={handleClear}>Clear all</Button>
+            <Button style={{backgroundColor:'#ECC30B', border: 'none'}} className='m-2' onClick={handleClear}>Clear all</Button>
           </Col>
           <Col>
-            <Remove items={items} setItems={setItems} setNames={setNames} />
+            <RemoveName items={items} setItems={setItems} setNames={setNames} />
           </Col>
-          <CircleStage items={items} setItems={setItems} />
+          <Col>
+            <RemoveWord wordItems={wordItems} setWordItems={setWordItems} setKeywords={setKeywords} />
+          </Col>
+          <CircleStage items={items} setItems={setItems} wordItems={wordItems} />
         </Row>
     </Container>
   </>

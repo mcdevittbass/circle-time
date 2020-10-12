@@ -10,8 +10,11 @@ const InputFields = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(props.name.length > 0 || props.keyword.length > 0) {
+        if(props.name) {
             props.onNameChange(props.name);
+        }
+        if(props.keyword) {
+            props.onWordChange(props.keyword)
         }
         props.setName('');
         props.setKeyword('');
@@ -20,7 +23,7 @@ const InputFields = (props) => {
 
     return (
         <React.Fragment>
-            <Button color='info' onClick={toggleModal} className='m-2'>
+            <Button style={{backgroundColor:'#5E7416'}} onClick={toggleModal} className='m-2'>
                 Add a name/keyword
             </Button>
             <Modal isOpen={isModalOpen} toggle={toggleModal} size={'sm'}>
