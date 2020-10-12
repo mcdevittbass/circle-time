@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col} from 'reactstrap';
+import { Container, Row, Col, Button } from 'reactstrap';
 import Konva from 'konva';
 import './App.css';
-import Circles from './components/Circles';
+import CircleStage from './components/Stage';
 import InputFields from './components/Input';
 import Remove from './components/Remove';
 
@@ -12,13 +12,11 @@ let centerY = window.innerHeight/2;
 console.log(centerX, centerY);
 
 function App() {
-  //develop way to render with empty array
-  const [names, setNames] = useState(['Betsy', 'Megan','John']);
-  const [name, setName] = useState(''); //current name
-  const [keyword, setKeyword] = useState(''); //current keyword
-  const [keywords, setKeywords] = useState(['Shade', 'Light']);
-  const [item, setItem] = useState({});
-  const [items, setItems] = useState(names.map((name, i) => generateItems(name, keywords[i])));
+  const [names, setNames] = useStickyState(['Betsy', 'Megan','John'], 'names');
+  const [name, setName] = useStickyState('', 'name'); //current name
+  const [keyword, setKeyword] = useStickyState('', 'keyword'); //current keyword
+  const [keywords, setKeywords] = useStickyState(['Shade', 'Light'], 'keywords');
+  const [items, setItems] = useStickyState(names.map((name, i) => generateItems(name, keywords[i])), 'items');
 
   function setPositions(shapeArr) {
     let paramterA = window.innerWidth*0.375;
@@ -52,16 +50,21 @@ function App() {
     setKeyword(newWord);
     const newWords = [...keywords, newWord]
     setKeywords(newWords);
-    const newItem = generateItems(newName, newWord)
-    setItem(newItem);
+    const newItem = generateItems(newName, newWord);
     const newItemArr = [...items, newItem];
     setItems(newItemArr);
     setPositions(newItemArr);
   }
 
+  const handleClear = () => {
+    setItems([]);
+    setNames([]);
+    setKeywords([]);
+  }
+
   return (
     <>
-      <Container fluid className='App m-0 p-0' style={{backgroundColor: '#69A2B0'}}> 
+      <Container fluid className='App m-0 p-0' style={{backgroundColor: '#69A2B080'}}> 
         <Row>  
           <Col>  
             <InputFields 
@@ -75,9 +78,12 @@ function App() {
               />
           </Col>
           <Col>
-            <Remove items={items} setItems={setItems}/>
+            <Button color='warning' className='m-2' onClick={handleClear}>Clear all</Button>
           </Col>
-          <Circles items={items} setItems={setItems} /*keywords={keywords}*//>
+          <Col>
+            <Remove items={items} setItems={setItems} setNames={setNames} />
+          </Col>
+          <CircleStage items={items} setItems={setItems} />
         </Row>
     </Container>
   </>
@@ -85,3 +91,18 @@ function App() {
 }
 
 export default App;
+
+
+//from https://joshwcomeau.com/react/persisting-react-state-in-localstorage/
+function useStickyState(defaultValue, key) {
+  const [value, setValue] = useState(() => {
+    const stickyValue = window.localStorage.getItem(key);
+    return stickyValue !== null
+      ? JSON.parse(stickyValue)
+      : defaultValue;
+  });
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+  return [value, setValue];
+}

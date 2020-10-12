@@ -1,29 +1,10 @@
 import React, { useEffect, useState} from 'react';
-import { Stage, Layer, Circle, Text, Group, Star, Image } from 'react-konva';
-import Konva from 'konva';
+import { Stage, Layer, Circle, Text, Group } from 'react-konva';
 import Stick from './Stick';
-import plate from '../img/plate2.png'; 
+import CenterImage from './CenterImage';
 
-let centerX = window.innerWidth/2;
-let centerY = window.innerHeight/2;
-
-const plateImg = new window.Image();  
-plateImg.src = plate;
-
-const Circles = ({ items, setItems }) => {
+const CircleStage = ({ items, setItems }) => {
   const [itemIndex, setItemIndex] = useState(0);
-  const [isPlateLoaded, setPlateLoaded] = useState(false);
-
-  const handleImgLoad = () => {
-    setPlateLoaded(true);
-  }
-
-  const handleLoadError = () => {
-    console.log("Failed to load")
-  }
-
-  plateImg.onload = handleImgLoad;
-  plateImg.onerror = handleLoadError;
   
   useEffect(() => {
     //useEffect fires after component mounts or updates
@@ -82,19 +63,7 @@ const Circles = ({ items, setItems }) => {
     return (
         <Stage width={window.innerWidth} height={window.innerHeight}> 
           <Layer>
-            {isPlateLoaded && (
-              <Image 
-                image={plateImg}
-                visible
-                id={'plate'} 
-                width={200}
-                height={200}
-                x={centerX} 
-                y={centerY}
-                offsetX={100}
-                offsetY={100}
-                />
-              )}
+            <CenterImage />
           </Layer>
           <Layer>
                   {items.map(item => (
@@ -141,4 +110,4 @@ const Circles = ({ items, setItems }) => {
     );
 }
 
-export default Circles;
+export default CircleStage;

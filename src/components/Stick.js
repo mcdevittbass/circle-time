@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Star, Image, Layer } from 'react-konva';
+import React, { useState } from 'react';
+import { Image } from 'react-konva';
 import feather from '../img/feather.png';
 
 const featherImage = new window.Image(150, 150);
@@ -31,16 +31,6 @@ const Stick = (props) => {
         />)
       }
     </>
-  
-    /*<Star 
-      innerRadius={10}
-      outerRadius={20} 
-      draggable
-      id={'star'} 
-      fill="#000" 
-      x={stickCoordX} 
-      y={stickCoordY}
-      />*/
     )
   }
 

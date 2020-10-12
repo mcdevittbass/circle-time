@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Row, Col, Input, Button, Modal, ModalHeader, ModalBody, Label, FormGroup } from 'reactstrap';
 
 
-const Remove = ( { items, setItems }) => {
+const Remove = ( { items, setItems, setNames }) => {
     const [isModalOpen, setModal] = useState(false);
     const [checkedBoxes, setChecked] = useState([]);
 
@@ -22,8 +22,11 @@ const Remove = ( { items, setItems }) => {
         e.preventDefault();
         let updatedItems = items.filter(circle => !checkedBoxes.includes(circle));
         setItems(updatedItems);
+        let updatedNames = updatedItems.map(item => item.text);
+        setNames(updatedNames);
         toggleModal();
     }
+
     return (
         <React.Fragment>
             <Button color='secondary' onClick={toggleModal} className='m-2'>
