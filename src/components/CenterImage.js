@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Image } from 'react-konva';
 import plate from '../img/plate2.png'; 
-import { useImage } from 'use-image';
+import candle from '../img/candle.gif';
 
 let centerX = window.innerWidth/2;
 let centerY = window.innerHeight/2;

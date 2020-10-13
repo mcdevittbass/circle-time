@@ -3,7 +3,7 @@ import { Container, Row, Col, Button } from 'reactstrap';
 import './App.css';
 import CircleStage from './components/Stage';
 import InputFields from './components/Input';
-import { RemoveName, RemoveWord } from './components/Remove';
+import Remove from './components/Remove';
 
 let centerX = window.innerWidth/2;
 let centerY = window.innerHeight/2;
@@ -100,10 +100,10 @@ function App() {
             <Button style={{backgroundColor:'#ECC30B', border: 'none'}} className='m-2' onClick={handleClear}>Clear all</Button>
           </Col>
           <Col>
-            <RemoveName items={items} setItems={setItems} setNames={setNames} />
+            <Remove objs={items} setObjs={setItems} setArray={setNames} buttonText={'Remove a Name'} buttonColor={'#0C595E'} />
           </Col>
           <Col>
-            <RemoveWord wordItems={wordItems} setWordItems={setWordItems} setKeywords={setKeywords} />
+            <Remove objs={wordItems} setObjs={setWordItems} setArray={setKeywords} buttonText={'Remove a Keyword'} buttonColor={'#020887'} />
           </Col>
           <CircleStage items={items} setItems={setItems} wordItems={wordItems} />
         </Row>

@@ -4,7 +4,8 @@ import { Form, Row, Col, Input, Button, Modal, ModalHeader, ModalBody } from 're
 const InputFields = (props) => {
     const [isModalOpen, setModal] = useState(false);
 
-    const toggleModal = () => {
+    const toggleModal = (e) => {
+        e.preventDefault();
         setModal(!isModalOpen);
     }
 
@@ -23,7 +24,7 @@ const InputFields = (props) => {
 
     return (
         <React.Fragment>
-            <Button style={{backgroundColor:'#5E7416'}} onClick={toggleModal} className='m-2'>
+            <Button style={{backgroundColor:'#5E7416'}} onClick={(e) => toggleModal(e)} className='m-2'>
                 Add a name/keyword
             </Button>
             <Modal isOpen={isModalOpen} toggle={toggleModal} size={'sm'}>

@@ -5,8 +5,10 @@ import CenterImage from './CenterImage';
 
 //to do: set up dragging for keywords so that position persists on reload
 
+
 const CircleStage = ({ items, setItems, wordItems }) => {
   const [itemIndex, setItemIndex] = useState(0);
+  const [randomNumbers, setRandomNumbers] = useState([...Array(items.length).keys()]);
   
   useEffect(() => {
     console.log(wordItems)
@@ -31,6 +33,17 @@ const CircleStage = ({ items, setItems, wordItems }) => {
         event.preventDefault();
         let minusIndex = itemIndex === 0 ? items.length - 1 : currentIndex - 1;
         setItemIndex(minusIndex);
+        break;
+      case 'Enter':
+        event.preventDefault(); 
+        let randomIndex = Math.floor(Math.random() * randomNumbers.length);
+        console.log('random index of numbers: ' + randomIndex);
+        setItemIndex(randomNumbers[randomIndex]);
+        if(randomNumbers.length <= 1) {
+          setRandomNumbers([...Array(items.length).keys()])
+        } else {
+          setRandomNumbers(randomNumbers.filter(num => num !== randomNumbers[randomIndex]));
+        }
         break;
       default:
         return;
