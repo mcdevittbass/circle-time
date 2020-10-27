@@ -52,7 +52,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(keywords)
     setCirclePositions(items);
   });
 
@@ -107,7 +106,7 @@ function App() {
           <Col>
             <Remove objs={wordItems} setObjs={setWordItems} setArray={setKeywords} buttonText={'Remove a Keyword'} buttonColor={'#020887'} />
           </Col>
-          <CircleStage items={items} setItems={setItems} wordItems={wordItems} />
+          <CircleStage items={items} setItems={setItems} wordItems={wordItems} centerX={centerX} centerY={centerY} />
         </Row>
     </Container>
   </>

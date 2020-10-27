@@ -9,7 +9,7 @@ import CenterImage from './CenterImage';
 
 const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
   const [itemIndex, setItemIndex] = useState(0);
-  const [wordIndex, setWordIndex] = useState(0);
+  const [wordIndex, setWordIndex] = useState(-1);
   const [randomNumbers, setRandomNumbers] = useState([...Array(items.length).keys()]);
   
   useEffect(() => {
@@ -40,26 +40,31 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
         event.preventDefault(); 
         if(items.length) {
           let randomIndex = Math.floor(Math.random() * randomNumbers.length);
-          console.log('random index of numbers: ' + randomIndex);
+          //console.log('random index of numbers: ' + randomIndex);
           setItemIndex(randomNumbers[randomIndex]);
           if(randomNumbers.length <= 1) {
             setRandomNumbers([...Array(items.length).keys()])
-        } else {
-          setRandomNumbers(randomNumbers.filter(num => num !== randomNumbers[randomIndex]));
-        }
-        }
+          } else {
+            setRandomNumbers(randomNumbers.filter(num => num !== randomNumbers[randomIndex]));
+          }
+        };
         break;
-      case ' ':
+      case " " || "Spacebar":
         event.preventDefault();
-        let lastWordIndex = !wordItems.length ? null : wordIndex === 0 ? wordItems.length - 1 : wordIndex - 1;
+        let updatedWordIndex = wordIndex < 0 ? 0 : wordIndex;
+        wordItems[updatedWordIndex].x = centerX - 50;
+        wordItems[updatedWordIndex].y = centerY - 15;
 
-        if(lastWordIndex) {
-          wordItems[lastWordIndex].x = 20;
-          wordItems[lastWordIndex].y = Math.random() * (window.innerHeight - 30);
-
-          wordItems[wordIndex].x = centerX - 50;
-          wordItems[wordIndex].y = centerY - 15;
+        if(wordIndex >= 0) {
+          let lastWordIndex = wordIndex === 0 ? wordItems.length - 1 : wordIndex - 1;
+          let centerRadius = 140;
+          let length = wordItems.length;
+          let angle = (lastWordIndex/length)*Math.PI*2;
+          wordItems[lastWordIndex].x = Math.cos(angle)*centerRadius + centerX - 40;
+          wordItems[lastWordIndex].y = Math.sin(angle)*centerRadius + centerY;
           setWordIndex(wordIndex === wordItems.length - 1 ? 0 : wordIndex + 1);
+        } else {
+          setWordIndex(wordItems.length > 0 ? 1 : -1);
         }
         break;
       default:
@@ -96,7 +101,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
     return (
         <Stage width={window.innerWidth} height={window.innerHeight}> 
           <Layer>
-            <CenterImage />
+            <CenterImage centerX={centerX} centerY={centerY}/>
           </Layer>
           <Layer>
               {items.map(item => (

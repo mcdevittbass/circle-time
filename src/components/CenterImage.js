@@ -3,8 +3,8 @@ import { Image } from 'react-konva';
 import plate from '../img/plate2.png'; 
 import candle from '../img/candle.gif';
 
-let centerX = window.innerWidth/2;
-let centerY = window.innerHeight/2;
+// let centerX = window.innerWidth/2;
+// let centerY = window.innerHeight/2;
 
 const plateImg = new window.Image();  
 plateImg.src = plate;
@@ -12,7 +12,7 @@ plateImg.src = plate;
 //attempt to use a web image as the center piece - not working 10/12/20
 //const webImageURL = 'https://media.giphy.com/media/fi9iBFsZXieAg/giphy.gif';
 
-const CenterImage = () => {
+const CenterImage = ({ centerX, centerY}) => {
     const [isPlateLoaded, setPlateLoaded] = useState(false);
     //const [webImage] = useImage(webImageURL);
 
