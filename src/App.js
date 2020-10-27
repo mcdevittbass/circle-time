@@ -5,12 +5,14 @@ import CircleStage from './components/Stage';
 import InputFields from './components/Input';
 import Remove from './components/Remove';
 
-let centerX = window.innerWidth/2;
-let centerY = window.innerHeight/2;
+//let centerX = window.innerWidth/2;
+//let centerY = window.innerHeight/2;
 
 function App() {
-  const colorPalette = ['#020887', '#C6EBBE', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
+  const colorPalette = ['#020887', '#6D326D', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
 
+  const [centerX, setCenterX] = useState(window.innerWidth/2);
+  const [centerY, setCenterY] = useState(window.innerHeight/2)
   const [names, setNames] = useStickyState([], 'names');
   const [name, setName] = useStickyState('', 'name'); //current name
   const [keyword, setKeyword] = useStickyState('', 'keyword'); //current keyword
@@ -43,8 +45,8 @@ function App() {
     let word = {
       color: colorPalette[keywords.length % 8],
       text: newWord,
-      x: Math.random() * (window.innerWidth),
-      y: Math.random() * (window.innerHeight)
+      x: 20,
+      y: Math.random() * (window.innerHeight - 30)
     }
     return word;
   };

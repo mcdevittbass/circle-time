@@ -4,10 +4,12 @@ import Stick from './Stick';
 import CenterImage from './CenterImage';
 
 //to do: set up dragging for keywords so that position persists on reload
+// let centerX = window.innerWidth/2;
+// let centerY = window.innerHeight/2;
 
-
-const CircleStage = ({ items, setItems, wordItems }) => {
+const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
   const [itemIndex, setItemIndex] = useState(0);
+  const [wordIndex, setWordIndex] = useState(0);
   const [randomNumbers, setRandomNumbers] = useState([...Array(items.length).keys()]);
   
   useEffect(() => {
@@ -21,28 +23,43 @@ const CircleStage = ({ items, setItems, wordItems }) => {
   });
 
   const handleKeyUp = (event) => {
-    let currentIndex = itemIndex;
+    let currentItemIndex = itemIndex;
     console.log(event.key);
     switch(event.key) {
       case 'ArrowRight':
         event.preventDefault();
-        let addIndex = itemIndex === items.length - 1 ? 0 : currentIndex + 1;
+        let addIndex = itemIndex === items.length - 1 ? 0 : currentItemIndex + 1;
         setItemIndex(addIndex);
         break;
       case 'ArrowLeft': 
         event.preventDefault();
-        let minusIndex = itemIndex === 0 ? items.length - 1 : currentIndex - 1;
+        let minusIndex = itemIndex === 0 ? items.length - 1 : currentItemIndex - 1;
         setItemIndex(minusIndex);
         break;
       case 'Enter':
         event.preventDefault(); 
-        let randomIndex = Math.floor(Math.random() * randomNumbers.length);
-        console.log('random index of numbers: ' + randomIndex);
-        setItemIndex(randomNumbers[randomIndex]);
-        if(randomNumbers.length <= 1) {
-          setRandomNumbers([...Array(items.length).keys()])
+        if(items.length) {
+          let randomIndex = Math.floor(Math.random() * randomNumbers.length);
+          console.log('random index of numbers: ' + randomIndex);
+          setItemIndex(randomNumbers[randomIndex]);
+          if(randomNumbers.length <= 1) {
+            setRandomNumbers([...Array(items.length).keys()])
         } else {
           setRandomNumbers(randomNumbers.filter(num => num !== randomNumbers[randomIndex]));
+        }
+        }
+        break;
+      case ' ':
+        event.preventDefault();
+        let lastWordIndex = !wordItems.length ? null : wordIndex === 0 ? wordItems.length - 1 : wordIndex - 1;
+
+        if(lastWordIndex) {
+          wordItems[lastWordIndex].x = 20;
+          wordItems[lastWordIndex].y = Math.random() * (window.innerHeight - 30);
+
+          wordItems[wordIndex].x = centerX - 50;
+          wordItems[wordIndex].y = centerY - 15;
+          setWordIndex(wordIndex === wordItems.length - 1 ? 0 : wordIndex + 1);
         }
         break;
       default:
@@ -100,8 +117,13 @@ const CircleStage = ({ items, setItems, wordItems }) => {
                       fontFamily='Helvetica'
                       fontSize={16}
                       fill='#FFF'
-                      offsetX={24}
-                      offsetY={6}
+                      align='center'
+                      verticalAlign='middle'
+                      offsetX={item.radius}
+                      offsetY={item.radius}
+                      width={item.radius * 2}
+                      height={item.radius * 2}
+                      wrap='word'
                       />
                   </Group>
               ))}

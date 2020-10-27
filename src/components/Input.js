@@ -5,7 +5,9 @@ const InputFields = (props) => {
     const [isModalOpen, setModal] = useState(false);
 
     const toggleModal = (e) => {
-        e.preventDefault();
+        if(!isModalOpen) {
+            e.preventDefault();
+        }
         setModal(!isModalOpen);
     }
 
@@ -17,6 +19,9 @@ const InputFields = (props) => {
         if(props.keyword) {
             props.onWordChange(props.keyword)
         }
+        handleClose();
+    }
+    const handleClose = () => {
         props.setName('');
         props.setKeyword('');
         toggleModal();
@@ -30,7 +35,7 @@ const InputFields = (props) => {
             <Modal isOpen={isModalOpen} toggle={toggleModal} size={'sm'}>
                 <ModalHeader>Add a name/keyword</ModalHeader>
                 <ModalBody>
-                    <Form onSubmit={handleSubmit}>
+                    <Form>
                         <Row className='form-group'>
                             <Col>
                                 <Input 
@@ -58,10 +63,10 @@ const InputFields = (props) => {
                         </Row>
                         <Row className='form-group'>
                             <Col>
-                                <Button color="secondary" type="cancel">Cancel</Button>
+                                <Button color="secondary" onClick={handleClose}>Cancel</Button>
                             </Col>
                             <Col>
-                                <Button color="info" type="submit">Submit</Button>
+                                <Button color="info" onClick={handleSubmit}>Submit</Button>
                             </Col>
                         </Row>
                     </Form>
