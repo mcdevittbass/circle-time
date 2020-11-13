@@ -4,6 +4,7 @@ import './App.css';
 import CircleStage from './components/Stage';
 import InputFields from './components/Input';
 import Remove from './components/Remove';
+import ChangeImg from './components/ChangeImg';
 
 //let centerX = window.innerWidth/2;
 //let centerY = window.innerHeight/2;
@@ -11,6 +12,7 @@ import Remove from './components/Remove';
 function App() {
   const colorPalette = ['#020887', '#6D326D', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
 
+  const [centerImg, setCenterImg] = useState('plate');
   const [centerX, setCenterX] = useState(window.innerWidth/2);
   const [centerY, setCenterY] = useState(window.innerHeight/2)
   const [names, setNames] = useStickyState([], 'names');
@@ -106,7 +108,10 @@ function App() {
           <Col>
             <Remove objs={wordItems} setObjs={setWordItems} setArray={setKeywords} buttonText={'Remove a Keyword'} buttonColor={'#020887'} />
           </Col>
-          <CircleStage items={items} setItems={setItems} wordItems={wordItems} centerX={centerX} centerY={centerY} />
+          <Col>
+            <ChangeImg setCenterImg={setCenterImg} buttonText={'Change Center Image'} buttonColor={'#6D326D'} />
+          </Col>
+          <CircleStage items={items} setItems={setItems} wordItems={wordItems} centerX={centerX} centerY={centerY} centerImg={centerImg}/>
         </Row>
     </Container>
   </>

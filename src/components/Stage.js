@@ -7,13 +7,12 @@ import CenterImage from './CenterImage';
 // let centerX = window.innerWidth/2;
 // let centerY = window.innerHeight/2;
 
-const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
+const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg }) => {
   const [itemIndex, setItemIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(-1);
   const [randomNumbers, setRandomNumbers] = useState([...Array(items.length).keys()]);
   
   useEffect(() => {
-    console.log(wordItems)
     //useEffect fires after component mounts or updates
     window.addEventListener('keyup', handleKeyUp);
     return () => {
@@ -24,7 +23,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
 
   const handleKeyUp = (event) => {
     let currentItemIndex = itemIndex;
-    console.log(event.key);
+    //console.log(event.key);
     switch(event.key) {
       case 'ArrowRight':
         event.preventDefault();
@@ -39,8 +38,9 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
       case 'Enter':
         event.preventDefault(); 
         if(items.length) {
-          let randomIndex = Math.floor(Math.random() * randomNumbers.length);
-          //console.log('random index of numbers: ' + randomIndex);
+          let randomIndex = randomNumbers.length === 1
+            ? 0
+            : Math.floor(Math.random() * (randomNumbers.length - 1) + 1);
           setItemIndex(randomNumbers[randomIndex]);
           if(randomNumbers.length <= 1) {
             setRandomNumbers([...Array(items.length).keys()])
@@ -50,8 +50,8 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
         };
         break;
       case " " || "Spacebar":
-        event.preventDefault();
-        let updatedWordIndex = wordIndex < 0 ? 0 : wordIndex;
+        event.preventDefault();  
+        let updatedWordIndex = wordIndex < 0 || wordIndex >= items.length ? 0 : wordIndex;
         wordItems[updatedWordIndex].x = centerX - 50;
         wordItems[updatedWordIndex].y = centerY - 15;
 
@@ -101,7 +101,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY }) => {
     return (
         <Stage width={window.innerWidth} height={window.innerHeight}> 
           <Layer>
-            <CenterImage centerX={centerX} centerY={centerY}/>
+            <CenterImage centerX={centerX} centerY={centerY} centerImg={centerImg}/>
           </Layer>
           <Layer>
               {items.map(item => (
