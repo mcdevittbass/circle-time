@@ -17,51 +17,48 @@ candleImg.src = stillCandles;
 //const webImageURL = 'https://media.giphy.com/media/fi9iBFsZXieAg/giphy.gif';
 
 const CenterImage = ({ centerX, centerY, centerImg}) => {
-    //const [isPlateLoaded, setPlateLoaded] = useState(false);
-    const [isCandleLoaded, setCandleLoaded] = useState(false);
-    const [ready, setReady] = useState(false);
-    //const [webImage] = useImage(webImageURL);
+  const [isPlateLoaded, setPlateLoaded] = useState(false);
+  const [isCandleLoaded, setCandleLoaded] = useState(false);
 
-    const handleImgLoad = () => {
-        //setPlateLoaded(true);
-        setCandleLoaded(true);
-      }
-    
-      const handleLoadError = () => {
-        console.log("Failed to load images")
-    }
+  const handlePlateLoad = () => {
+    setPlateLoaded(true);
+  }
+  const handleCandleLoad = () => {
+    setCandleLoaded(true);
+  }
+  const handleLoadError = () => {
+    console.log("Failed to load images")
+  }
 
-    // plateImg.onload = handleImgLoad;
-    // plateImg.onerror = handleLoadError;
-    candleImg.onload = handleImgLoad;
-    candleImg.onerror = handleLoadError;
+  plateImg.onload = handlePlateLoad;
+  plateImg.onerror = handleLoadError;
+  candleImg.onload = handleCandleLoad;
+  candleImg.onerror = handleLoadError;
 
-    // const imgMap = {
-    //   'plate': plateImg,
-    //   'candle': candleImg
-    // }
-    // let imgKey = null;
-    // if(isPlateLoaded && isCandleLoaded) {
-    //   imgKey = Object.keys(imgMap).filter(key => key === centerImg).join('');
-    //   if(imgKey) setReady(true);
-    // }
-    // console.log(ready); 
-    return (
-        <>
-        {isCandleLoaded && (
-            <Image 
-              image={candleImg}
-              visible
-              id={'candle'} 
-              width={300}
-              height={300}
-              x={centerX} 
-              y={centerY}
-              offsetX={150}
-              offsetY={150}
-              />
-            )}
-        </>
+  const images = [
+    {name: 'plate', img: plateImg, load: isPlateLoaded},
+    {name: 'candle', img: candleImg, load: isCandleLoaded}
+  ]
+  
+  let currentImgObj = images.find(obj => obj.name === centerImg);
+  console.log(currentImgObj.load);
+
+  return (
+      <>
+      {currentImgObj.load && (
+          <Image 
+            image={currentImgObj.img}
+            visible
+            id={'candle'} 
+            width={300}
+            height={300}
+            x={centerX} 
+            y={centerY}
+            offsetX={150}
+            offsetY={150}
+            />
+          )}
+      </>
     )
 }
 

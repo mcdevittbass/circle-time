@@ -35,7 +35,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg }
         let minusIndex = itemIndex === 0 ? items.length - 1 : currentItemIndex - 1;
         setItemIndex(minusIndex);
         break;
-      case 'Enter':
+      case 'r':
         event.preventDefault(); 
         if(items.length) {
           let randomIndex = randomNumbers.length === 1
@@ -51,20 +51,23 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg }
         break;
       case " " || "Spacebar":
         event.preventDefault();  
-        let updatedWordIndex = wordIndex < 0 || wordIndex >= items.length ? 0 : wordIndex;
-        wordItems[updatedWordIndex].x = centerX - 50;
-        wordItems[updatedWordIndex].y = centerY - 15;
+        if(wordItems.length) {
+          let updatedWordIndex = wordIndex < 0 || wordIndex >= wordItems.length ? 0 : wordIndex;
+          wordItems[updatedWordIndex].x = centerX - 50;
+          wordItems[updatedWordIndex].y = centerY - 15;
 
-        if(wordIndex >= 0) {
-          let lastWordIndex = wordIndex === 0 ? wordItems.length - 1 : wordIndex - 1;
-          let centerRadius = 140;
-          let length = wordItems.length;
-          let angle = (lastWordIndex/length)*Math.PI*2;
-          wordItems[lastWordIndex].x = Math.cos(angle)*centerRadius + centerX - 40;
-          wordItems[lastWordIndex].y = Math.sin(angle)*centerRadius + centerY;
-          setWordIndex(wordIndex === wordItems.length - 1 ? 0 : wordIndex + 1);
-        } else {
-          setWordIndex(wordItems.length > 0 ? 1 : -1);
+          if(wordIndex <= wordItems.length && wordIndex >= 0) {
+            let lastWordIndex = wordIndex === 0 ? wordItems.length - 1 : wordIndex - 1;
+            console.log(lastWordIndex)
+            let centerRadius = 140;
+            let length = wordItems.length;
+            let angle = (lastWordIndex/length)*Math.PI*2;
+            wordItems[lastWordIndex].x = Math.cos(angle)*centerRadius + centerX - 40;
+            wordItems[lastWordIndex].y = Math.sin(angle)*centerRadius + centerY;
+            setWordIndex(wordIndex === wordItems.length - 1 ? 0 : wordIndex + 1);
+          } else {
+            setWordIndex(wordItems.length > 0 ? 1 : -1);
+          }
         }
         break;
       default:

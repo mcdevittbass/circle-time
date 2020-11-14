@@ -3,7 +3,7 @@ import { Form, Row, Col, Input, Button, Modal, ModalHeader, ModalBody, Label, Fo
 
 const ChangeImg = ({ setCenterImg, buttonText, buttonColor }) => {
     const [isModalOpen, setModal] = useState(false);
-    const [selected, setSelected] = useState('');
+    const [selected, setSelected] = useState('plate');
 
     const toggleModal = () => {
         setModal(!isModalOpen);
@@ -32,6 +32,7 @@ const ChangeImg = ({ setCenterImg, buttonText, buttonColor }) => {
                                 <FormGroup>
                                     <Label>
                                         <Input type='select' name='select' id='img-select' onChange={handleSelect}>
+                                            <option selected>Select Image</option>
                                             <option value='plate'>Plate</option>
                                             <option value='candle'>Candle</option>
                                         </Input>
