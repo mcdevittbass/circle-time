@@ -4,17 +4,12 @@ import plate from '../img/plate2.png';
 //import candle from '../img/candle.gif';
 import stillCandles from '../img/still_candles.png';
 
-// let centerX = window.innerWidth/2;
-// let centerY = window.innerHeight/2;
 
 const plateImg = new window.Image();  
 plateImg.src = plate;
 
 const candleImg = new window.Image();
 candleImg.src = stillCandles;
-
-//attempt to use a web image as the center piece - not working 10/12/20
-//const webImageURL = 'https://media.giphy.com/media/fi9iBFsZXieAg/giphy.gif';
 
 const CenterImage = ({ centerX, centerY, centerImg}) => {
   const [isPlateLoaded, setPlateLoaded] = useState(false);
@@ -41,7 +36,6 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
   ]
   
   let currentImgObj = images.find(obj => obj.name === centerImg);
-  console.log(currentImgObj.load);
 
   return (
       <>
@@ -49,7 +43,7 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
           <Image 
             image={currentImgObj.img}
             visible
-            id={'candle'} 
+            id={currentImgObj.name} 
             width={300}
             height={300}
             x={centerX} 

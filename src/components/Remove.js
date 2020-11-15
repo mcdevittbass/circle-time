@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Row, Col, Input, Button, Modal, ModalHeader, ModalBody, Label, FormGroup } from 'reactstrap';
 
 
-const Remove = ( { objs, setObjs, setArray, buttonText, buttonColor }) => {
+const Remove = ( { objs, setObjs, setArray, buttonText, buttonColor, listText }) => {
     const [isModalOpen, setModal] = useState(false);
     const [checkedBoxes, setChecked] = useState([]);
 
@@ -41,7 +41,7 @@ const Remove = ( { objs, setObjs, setArray, buttonText, buttonColor }) => {
                                 <FormGroup>
                                     <Label>
                                         <Input type='checkbox' checked={checkedBoxes.includes(item) ? true : false} onChange={(e) => handleCheck(e, item)}/>
-                                            Name: {item.text}
+                                            {listText}: {item.text}
                                     </Label>
                                 </FormGroup>
                             </Row>
