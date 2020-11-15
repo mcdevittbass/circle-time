@@ -1,12 +1,16 @@
 import React from 'react';
-import { Router } from 'react-router';
+import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import Main from './components/Main'
 
 function App() {
   return (
     <Router>
-      <Main />
+      <Switch>
+        <Route path='/app'><Main /></Route>
+        <Redirect to='/app' />
+      </Switch>
+      
     </Router>
 
   )
