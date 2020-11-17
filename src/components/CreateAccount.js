@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader} from 'reactstrap';
+import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader } from 'reactstrap';
 
-const Login = (props) => {
+const CreateAccount = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordCompare, setPasswordCompare] = useState('');
 
     const handleSubmit = (e) => {
-        console.log('submitted: ' + email + " " + password);
+        if(password !== passwordCompare) {
+            alert('Your passwords didn\'t match!');
+        } else {
+            console.log('created: ' + email + " " + password); 
+        }  
     }
 
     const handleInputChange = (e) => {
@@ -14,14 +19,16 @@ const Login = (props) => {
             setEmail(e.target.value);
         } else if(e.target.name === 'password') {
             setPassword(e.target.value);
+        } else if(e.target.name === 'passwordCompare') {
+            setPasswordCompare(e.target.value);
         }
         console.log(e.target.name + ': ' + e.target.value);
     }
 
     return (
-        <Card>
+        <Card className='create-account'>
             <CardHeader>
-                Login
+                Create an Account
             </CardHeader>
             <CardBody>
                 <Form id="loginForm">
@@ -45,6 +52,16 @@ const Login = (props) => {
                             onChange={handleInputChange}/>
                         </Col>
                     </FormGroup>
+                    <FormGroup className="row">
+                        <Col>
+                            <Label className="col-form-label" htmlFor="passwordCompare">Re-enter Password</Label>
+                        </Col>
+                        <Col className="col-sm-8">
+                            <Input type="password" id="passwordCompare" name="passwordCompare" placeholder="Same Password" 
+            
+                            onChange={handleInputChange}/>
+                        </Col>
+                    </FormGroup>
                     <FormGroup row>
                         <Col md={{size: 10, }} className='text-right'>
                             <Button className='m-1' color="secondary">Cancel</Button>
@@ -60,4 +77,4 @@ const Login = (props) => {
     );
 }
 
-export default Login;
+export default CreateAccount;
