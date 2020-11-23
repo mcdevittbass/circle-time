@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader } from 'reactstrap';
 
-const CreateAccount = (props) => {
+const CreateAccount = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCompare, setPasswordCompare] = useState('');
 
+    let history = useHistory();
+
     const handleSubmit = (e) => {
         if(password !== passwordCompare) {
             alert('Your passwords didn\'t match!');
-        } else {
-            console.log('created: ' + email + " " + password); 
+        } else { 
+            history.push('/app');
         }  
     }
 
@@ -26,9 +29,9 @@ const CreateAccount = (props) => {
     }
 
     return (
-        <Card className='create-account'>
+        <Card>
             <CardHeader>
-                Create an Account
+                <b>Create an Account</b>
             </CardHeader>
             <CardBody>
                 <Form id="loginForm">
@@ -65,8 +68,8 @@ const CreateAccount = (props) => {
                     <FormGroup row>
                         <Col md={{size: 10, }} className='text-right'>
                             <Button className='m-1' color="secondary">Cancel</Button>
-                            <Button type="submit" color="primary" onClick={handleSubmit}>
-                                Submit
+                            <Button type="submit" className='btn submit-button' onClick={handleSubmit}>
+                                Create Account
                             </Button>
                         </Col>
                     </FormGroup>

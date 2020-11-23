@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
 import plate from '../img/plate2.png'; 
 //import candle from '../img/candle.gif';
 import stillCandles from '../img/still_candles.png';
-
 
 const plateImg = new window.Image();  
 plateImg.src = plate;
@@ -15,6 +14,11 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
   const [isPlateLoaded, setPlateLoaded] = useState(false);
   const [isCandleLoaded, setCandleLoaded] = useState(false);
 
+  useEffect( () => {
+    console.log('plate: ' + isPlateLoaded);
+    console.log('candle: ' + isCandleLoaded);
+  });
+  
   const handlePlateLoad = () => {
     setPlateLoaded(true);
   }

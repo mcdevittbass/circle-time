@@ -1,25 +1,45 @@
-import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import React, { useState } from 'react';
+import { Container, Row, Col, Button } from 'reactstrap';
 import Login from './Login';
 import CreateAccount from './CreateAccount';
-//controlled form
-//option to create account
+
 
 const HomePage = () => {
+    const [currentComponent, setCurrentComponent] = useState(<Login />);
+    const [switchText, setSwitchText] = useState('Don\'t have an account? Create One');
+
+
+    const handleChangeComponent = (e) => {
+        console.log(currentComponent.type.name);
+        if(currentComponent.type.name === 'Login') {
+            setCurrentComponent(<CreateAccount />);
+            setSwitchText('Already have an account? Login');
+        } else {
+            setCurrentComponent(<Login />);
+            setSwitchText('Don\'t have an account? Create One');
+        }
+    }
+
     return (
-    <Container className='container-fluid'>
-        <Row>
-            <h1 className='title-text'>Circle Up</h1>
-        </Row>
-        <Row>
-            <Col sm={6}>
-                <CreateAccount />
-            </Col>
-            <Col sm={6} className='login'>
-                <Login />
+    <>
+        <Row className='login-header'>
+            <Col xs={12} className='text-center title-text'>
+                <h1>Circle Up</h1>
             </Col>
         </Row>
-    </Container>
+        <Container className='container-fluid'>
+            <Row style={{padding: 3, justifyContent: 'center'}}>
+                <Col sm={6}>
+                    {currentComponent}
+                </Col>
+            </Row>
+            <Row>
+                <Col className='text-center m-4'>
+                    <Button color='light' onClick={handleChangeComponent}>{switchText}</Button>
+                </Col>
+            </Row>
+        </Container>
+    </>
     );
 }
 

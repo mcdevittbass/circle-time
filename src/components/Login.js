@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader} from 'reactstrap';
 
-const Login = (props) => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const history = useHistory();
+
     const handleSubmit = (e) => {
-        console.log('submitted: ' + email + " " + password);
+        if(email !== 'mcdevittbass@gmail.com' || password !== 'password') {
+            alert('Your email or password do not match our records. Please try again.');
+        } else {
+            history.push('/app');
+        }
     }
 
     const handleInputChange = (e) => {
@@ -21,7 +28,7 @@ const Login = (props) => {
     return (
         <Card>
             <CardHeader>
-                Login
+                <b>Login</b>
             </CardHeader>
             <CardBody>
                 <Form id="loginForm">
@@ -48,8 +55,8 @@ const Login = (props) => {
                     <FormGroup row>
                         <Col md={{size: 10, }} className='text-right'>
                             <Button className='m-1' color="secondary">Cancel</Button>
-                            <Button type="submit" color="primary" onClick={handleSubmit}>
-                                Submit
+                            <Button type="submit" className='submit-button' onClick={handleSubmit}>
+                                Login
                             </Button>
                         </Col>
                     </FormGroup>

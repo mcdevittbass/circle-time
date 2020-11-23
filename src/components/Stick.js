@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
 import feather from '../img/feather.png';
 
@@ -11,9 +11,12 @@ const Stick = (props) => {
   let stickCoordX = props.items.length ? props.items[props.itemIndex].x - 40 : null;
   let stickCoordY = props.items.length ? props.items[props.itemIndex].y - 30 : null;
 
+  useEffect(() => {
+      console.log('feather: ' + isFeatherLoaded);
+  })
+
   const handleFeatherLoad = () => {
     setLoadFeather(true);
-    console.log('feather: ' + isFeatherLoaded);
   }
 
   featherImage.onload = handleFeatherLoad;
