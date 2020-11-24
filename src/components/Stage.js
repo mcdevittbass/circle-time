@@ -47,6 +47,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg }
           } else {
             setRandomNumbers(randomNumbers.filter(num => num !== randomNumbers[randomIndex]));
           }
+          console.log(randomNumbers[randomIndex]);
         };
         break;
       case " " || "Spacebar":
