@@ -10,7 +10,7 @@ import MainButton from './MainButton';
 function Main() {
   const colorPalette = ['#020887', '#6D326D', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
 
-  const [centerImg, setCenterImg] = useState('plate');
+  const [centerImg, setCenterImg] = useStickyState('plate', 'centerImg');
   const [centerX] = useState(window.innerWidth/2);
   const [centerY] = useState(window.innerHeight/2)
   const [names, setNames] = useStickyState([], 'names');
