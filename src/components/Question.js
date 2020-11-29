@@ -17,7 +17,7 @@ const Question = ( { centerX, centerY, questionText}) => {
             wrap='word'
             offsetX={200}
             x={centerX}
-            y={centerY - 150}
+            y={centerY - 30}
             key={'q'}
         />
     </>
