@@ -37,7 +37,8 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
 
   const images = [
     {name: 'plate', img: plateImg, load: isPlateLoaded},
-    {name: 'candle', img: candleImg, load: isCandleLoaded}
+    {name: 'candle', img: candleImg, load: isCandleLoaded},
+    {name: 'empty', load: false}
   ]
   
   let currentImgObj = images.find(obj => obj.name === centerImg);
@@ -50,12 +51,12 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
             image={currentImgObj.img}
             visible
             id={'candle'} 
-            width={300}
-            height={300}
+            width={250}
+            height={250}
             x={centerX} 
             y={centerY}
-            offsetX={150}
-            offsetY={150}
+            offsetX={125}
+            offsetY={125}
             />
           )}
       </>

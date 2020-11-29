@@ -35,6 +35,7 @@ const ChangeImg = ({ setCenterImg, buttonText, buttonColor }) => {
                                             <option selected>Select Image</option>
                                             <option value='plate'>Plate</option>
                                             <option value='candle'>Candle</option>
+                                            <option value='empty'>No Image</option>
                                         </Input>
                                     </Label>
                                 </FormGroup>
