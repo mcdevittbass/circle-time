@@ -12,7 +12,7 @@ const MainButton = (props) => {
 
     return (
         <React.Fragment>
-            <Row style={{margin: 'auto'}}>
+            <Row style={{marginLeft: 15, marginTop: 10}}>
                 <Col>
                     <Button style={{backgroundColor: '#0C595E'}} onClick={toggleModal} className='m-2'>
                         Update Your Environment

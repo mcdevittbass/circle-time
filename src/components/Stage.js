@@ -7,6 +7,8 @@ import Question from './Question';
 //to do: set up dragging for keywords so that position persists on reload
 // let centerX = window.innerWidth/2;
 // let centerY = window.innerHeight/2;
+let stageWidth = window.innerWidth;
+let stageHeight = window.innerHeight;
 
 const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, questionText }) => {
   const [itemIndex, setItemIndex] = useState(0);
@@ -104,7 +106,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
   };
 
     return (
-        <Stage width={window.innerWidth} height={window.innerHeight}> 
+        <Stage width={stageWidth} height={stageHeight}> 
           <Layer>
             <CenterImage centerX={centerX} centerY={centerY} centerImg={centerImg}/>
             <Question centerX={centerX} centerY={centerY} questionText={questionText}/>

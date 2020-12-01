@@ -25,12 +25,13 @@ function Main() {
     let paramterA = window.innerWidth*0.375;
     let paramterB = window.innerHeight*0.4;
     const length = shapeArr.length;
+    let biggestShapeRadius = paramterB*0.2
     shapeArr.forEach((shape, i) => {
       let angle = (i/length)*Math.PI*2;
       shape.x = Math.cos(angle)*paramterA + centerX;
       shape.y = Math.sin(angle)*paramterB + centerY;
       shape.key = 'node-' + i;
-      shape.radius = length < 18 ? 50 : length < 26 ? 40 : 30;
+      shape.radius = length < 18 ? biggestShapeRadius : length < 26 ? biggestShapeRadius*0.8 : biggestShapeRadius*0.6;
     })
   }
 
@@ -54,6 +55,7 @@ function Main() {
 
   useEffect(() => {
     setCirclePositions(items);
+    console.log(window.innerWidth, window.innerHeight)
   });
 
   const handleAddName = (newName) => {
