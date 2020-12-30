@@ -3,7 +3,6 @@ import { Container, Row, Col, Button } from 'reactstrap';
 import CircleStage from './Stage';
 import MainButton from './MainButton';
 
-
 //let centerX = window.innerWidth/2;
 //let centerY = window.innerHeight/2;
 
