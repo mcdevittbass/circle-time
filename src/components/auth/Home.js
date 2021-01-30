@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import Login from './Login';
 import CreateAccount from './CreateAccount';
+import FirebaseContext from '../firebase/context';
 
 
 const HomePage = () => {
@@ -12,7 +13,7 @@ const HomePage = () => {
     const handleChangeComponent = (e) => {
         console.log(currentComponent.type.name);
         if(currentComponent.type.name === 'Login') {
-            setCurrentComponent(<CreateAccount />);
+            setCurrentComponent(<CreateAccount setCurrentComponent={setCurrentComponent} />);
             setSwitchText('Already have an account? Login');
         } else {
             setCurrentComponent(<Login />);

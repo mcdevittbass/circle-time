@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
-import plate from '../img/plate2.png'; 
-//import candle from '../img/candle.gif';
-import stillCandles from '../img/still_candles.png';
+import plate from '../../img/plate2.png'; 
+//import candle from '../../img/candle.gif';
+import stillCandles from '../../img/still_candles.png';
 
 const plateImg = new window.Image();  
 plateImg.src = plate;
@@ -36,7 +36,8 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
 
   const images = [
     {name: 'plate', img: plateImg, load: isPlateLoaded},
-    {name: 'candle', img: candleImg, load: isCandleLoaded}
+    {name: 'candle', img: candleImg, load: isCandleLoaded},
+    {name: 'empty', load: false}
   ]
   
   let currentImgObj = images.find(obj => obj.name === centerImg);
@@ -48,12 +49,12 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
             image={currentImgObj.img}
             visible
             id={currentImgObj.name} 
-            width={300}
-            height={300}
+            width={250}
+            height={250}
             x={centerX} 
             y={centerY}
-            offsetX={150}
-            offsetY={150}
+            offsetX={125}
+            offsetY={125}
             />
           )}
       </>

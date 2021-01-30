@@ -31,10 +31,10 @@ const ChangeImg = ({ setCenterImg, buttonText, buttonColor }) => {
                             <Row className='form-group px-5 m-0'>
                                 <FormGroup>
                                     <Label>
-                                        <Input type='select' name='select' id='img-select' onChange={handleSelect}>
-                                            <option selected>Select Image</option>
+                                        <Input type='select' name='select' id='img-select' defaultValue='Select Image' onChange={handleSelect}>
                                             <option value='plate'>Plate</option>
                                             <option value='candle'>Candle</option>
+                                            <option value='empty'>No Image</option>
                                         </Input>
                                     </Label>
                                 </FormGroup>

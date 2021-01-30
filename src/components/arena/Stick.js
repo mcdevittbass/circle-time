@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
-import feather from '../img/feather.png';
+import feather from '../../img/feather.png';
 
 const featherImage = new window.Image(150, 150);
 featherImage.src = feather;

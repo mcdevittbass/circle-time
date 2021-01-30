@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row } from 'reactstrap';
 import CircleStage from './Stage';
-import InputFields from './Input';
-import Remove from './Remove';
-import ChangeImg from './ChangeImg';
+import MainButton from './MainButton';
 
 //let centerX = window.innerWidth/2;
 //let centerY = window.innerHeight/2;
@@ -11,7 +9,7 @@ import ChangeImg from './ChangeImg';
 function Main() {
   const colorPalette = ['#020887', '#6D326D', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
 
-  const [centerImg, setCenterImg] = useState('plate');
+  const [centerImg, setCenterImg] = useStickyState('plate', 'centerImg');
   const [centerX] = useState(window.innerWidth/2);
   const [centerY] = useState(window.innerHeight/2)
   const [names, setNames] = useStickyState([], 'names');
@@ -20,17 +18,19 @@ function Main() {
   const [keywords, setKeywords] = useStickyState([], 'keywords');
   const [items, setItems] = useStickyState(names.map(name => generateItems(name)), 'items');
   const [wordItems, setWordItems] = useStickyState(keywords.map(word => generateWordItems(word)), 'keywordItems');
+  const [questionText, setQuestionText] = useStickyState('', 'question');
 
   function setCirclePositions(shapeArr) {
     let paramterA = window.innerWidth*0.375;
     let paramterB = window.innerHeight*0.4;
     const length = shapeArr.length;
+    let biggestShapeRadius = paramterB*0.2
     shapeArr.forEach((shape, i) => {
       let angle = (i/length)*Math.PI*2;
       shape.x = Math.cos(angle)*paramterA + centerX;
       shape.y = Math.sin(angle)*paramterB + centerY;
       shape.key = 'node-' + i;
-      shape.radius = length < 18 ? 50 : length < 26 ? 40 : 30;
+      shape.radius = length < 18 ? biggestShapeRadius : length < 26 ? biggestShapeRadius*0.8 : biggestShapeRadius*0.6;
     })
   }
 
@@ -54,6 +54,7 @@ function Main() {
 
   useEffect(() => {
     setCirclePositions(items);
+    console.log(window.innerWidth, window.innerHeight)
   });
 
   const handleAddName = (newName) => {
@@ -85,53 +86,29 @@ function Main() {
   return (
     <>
         <Container fluid className='App m-0 p-0' style={{backgroundColor: '#fff'}}> 
-            <Row>  
-                <Col>  
-                    <InputFields 
-                    name={name} 
+            <Row>
+                <MainButton
+                    centerImg={centerImg}
+                    setCenterImg={setCenterImg}
+                    items={items}
+                    setItems={setItems}
+                    wordItems={wordItems}
+                    setWordItems={setWordItems}
+                    name={name}
                     setName={setName}
                     keyword={keyword}
                     setKeyword={setKeyword}
-                    names={names} 
+                    names={names}
+                    setNames={setNames}
                     keywords={keywords}
-                    onNameChange={() => handleAddName(name)}
-                    onWordChange={() => handleAddWord(keyword)}
-                    />
-                </Col>
-                <Col>
-                    <Button 
-                        style={{backgroundColor:'#ECC30B', border: 'none'}} 
-                        className='m-2' 
-                        onClick={handleClear}>Clear all
-                    </Button>
-                </Col>
-                <Col>
-                    <Remove 
-                        listText='Name' 
-                        objs={items} 
-                        setObjs={setItems} 
-                        setArray={setNames} 
-                        buttonText={'Remove a Name'} 
-                        buttonColor={'#0C595E'} 
-                    />
-                </Col>
-                <Col>
-                    <Remove 
-                        listText='Word' 
-                        objs={wordItems} 
-                        setObjs={setWordItems} 
-                        setArray={setKeywords} 
-                        buttonText={'Remove a Keyword'} 
-                        buttonColor={'#020887'} 
-                    />
-                </Col>
-                <Col>
-                    <ChangeImg 
-                        setCenterImg={setCenterImg} 
-                        buttonText={'Change Center Image'} 
-                        buttonColor={'#6D326D'} 
-                    />
-                </Col>
+                    setKeywords={setKeywords}
+                    setQuestionText={setQuestionText}
+                    handleAddName={handleAddName}
+                    handleAddWord={handleAddWord}
+                    handleClear={handleClear}
+                 />
+            </Row>
+            <Row style={{margin: 0}}> 
                 <CircleStage 
                     items={items} 
                     setItems={setItems} 
@@ -139,6 +116,7 @@ function Main() {
                     centerX={centerX} 
                     centerY={centerY} 
                     centerImg={centerImg}
+                    questionText={questionText}
                 />
             </Row>
         </Container>
