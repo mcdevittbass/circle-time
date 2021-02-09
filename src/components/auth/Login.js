@@ -2,18 +2,27 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader} from 'reactstrap';
 
-const Login = () => {
+const Login = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
 
     const history = useHistory();
 
+    const isInvalid = email === '' || password === '';
+
     const handleSubmit = (e) => {
-        if(email !== 'mcdevittbass@gmail.com' || password !== 'password') {
-            alert('Your email or password do not match our records. Please try again.');
-        } else {
-            history.push('/account');
-        }
+        e.preventDefault(); 
+        props.firebase
+            .doSignInWithEmailAndPassword(email, password)
+            .then(authUser => {
+                setEmail('');
+                setPassword('');
+                history.push('/account');
+            })
+            .catch(err => {
+                setError(err);
+            });
     }
 
     const handleInputChange = (e) => {
@@ -22,7 +31,6 @@ const Login = () => {
         } else if(e.target.name === 'password') {
             setPassword(e.target.value);
         }
-        console.log(e.target.name + ': ' + e.target.value);
     }
 
     return (
@@ -55,11 +63,12 @@ const Login = () => {
                     <FormGroup row>
                         <Col md={{size: 10, }} className='text-right'>
                             <Button className='m-1' color="secondary">Cancel</Button>
-                            <Button type="submit" className='submit-button'>
+                            <Button type="submit" disabled={isInvalid} className='submit-button'>
                                 Login
                             </Button>
                         </Col>
                     </FormGroup>
+                    {error && <p>{error.message}</p>}
                 </Form>
             </CardBody>
         </Card>

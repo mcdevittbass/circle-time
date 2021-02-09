@@ -6,17 +6,15 @@ import FirebaseContext from '../firebase/context';
 
 
 const HomePage = () => {
-    const [currentComponent, setCurrentComponent] = useState(<Login />);
+    const [currentComponent, setCurrentComponent] = useState('Login');
     const [switchText, setSwitchText] = useState('Don\'t have an account? Create One');
 
-
     const handleChangeComponent = (e) => {
-        console.log(currentComponent.type.name);
-        if(currentComponent.type.name === 'Login') {
-            setCurrentComponent(<CreateAccount setCurrentComponent={setCurrentComponent} />);
+        if(currentComponent  === 'Login') {
+            setCurrentComponent('Create Account');
             setSwitchText('Already have an account? Login');
         } else {
-            setCurrentComponent(<Login />);
+            setCurrentComponent('Login');
             setSwitchText('Don\'t have an account? Create One');
         }
     }
@@ -31,7 +29,12 @@ const HomePage = () => {
         <Container className='container-fluid'>
             <Row style={{padding: 3, justifyContent: 'center'}}>
                 <Col sm={6}>
-                    {currentComponent}
+                    <FirebaseContext.Consumer>
+                        {currentComponent === 'Login' ? 
+                            firebase => <Login firebase={firebase}/> :
+                            firebase => <CreateAccount firebase={firebase}/> 
+                        }
+                    </FirebaseContext.Consumer>
                 </Col>
             </Row>
             <Row>

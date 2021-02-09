@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader } from 'reactstrap';
 
-const CreateAccount = ({ setCurrentComponent }) => {
+const CreateAccount = (props) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCompare, setPasswordCompare] = useState('');
@@ -15,21 +15,18 @@ const CreateAccount = ({ setCurrentComponent }) => {
         email === '';
 
     const handleSubmit = (e) => {
-        this.props.firebase
+        e.preventDefault(); 
+        props.firebase
             .doCreateUserWithEmailAndPassword(email, password)
             .then(authUser => {
                 setEmail('');
                 setPassword('');
                 setPasswordCompare('');
+                history.push('/account');
             })
             .catch(err => {
                 setError(err);
-            });
-
-        e.preventDefault();
-        if(!isInvalid){ 
-            history.push('/app');
-        }  
+            }); 
     }
 
     const handleInputChange = (e) => {
@@ -94,8 +91,8 @@ const CreateAccount = ({ setCurrentComponent }) => {
                             </Button>
                         </Col>
                     </FormGroup>
+                    {error && <p>{error.message}</p>}
                 </Form>
-                {error && <p>{error.message}</p>}
             </CardBody>
         </Card>
         
