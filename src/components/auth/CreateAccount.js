@@ -8,9 +8,9 @@ const CreateAccount = (props) => {
     const [passwordCompare, setPasswordCompare] = useState('');
     const [error, setError] = useState(null);
 
-    let history = useHistory();
+    const history = useHistory();
 
-    const isInvalid = password !== passwordCompare ||
+    let isInvalid = password !== passwordCompare ||
         password === '' ||
         email === '';
 

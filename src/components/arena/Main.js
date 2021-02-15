@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row } from 'reactstrap';
 import CircleStage from './Stage';
 import MainButton from './MainButton';
+import AuthError from '../auth/AuthError';
 
 //let centerX = window.innerWidth/2;
 //let centerY = window.innerHeight/2;
 
-function Main() {
+function Main({ authUser }) {
   const colorPalette = ['#020887', '#6D326D', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
 
   const [centerImg, setCenterImg] = useStickyState('plate', 'centerImg');
@@ -54,7 +55,7 @@ function Main() {
 
   useEffect(() => {
     setCirclePositions(items);
-    console.log(window.innerWidth, window.innerHeight)
+    //console.log(window.innerWidth, window.innerHeight)
   });
 
   const handleAddName = (newName) => {
@@ -84,6 +85,10 @@ function Main() {
   }
 
   return (
+    !authUser 
+    ?
+    <AuthError />
+    :
     <>
         <Container fluid className='App m-0 p-0' style={{backgroundColor: '#fff'}}> 
             <Row>

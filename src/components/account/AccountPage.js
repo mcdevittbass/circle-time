@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Button, Card, CardBody } from 'reactstrap';
 import CardTitle from 'reactstrap/lib/CardTitle';
 import FirebaseContext from '../firebase/context';
+import AuthError from '../auth/AuthError';
+import ChangePassword from '../auth/ChangePassword';
 
 
 const SignOut = ({ firebase }) => {
@@ -18,7 +20,7 @@ const SignOut = ({ firebase }) => {
     )
 }
 
-const AccountPage = () => {
+const AccountPage = ( { authUser }) => {
     const history = useHistory();
 
     const navToCircle = (e) => {
@@ -26,10 +28,19 @@ const AccountPage = () => {
     }
 
     return (
+        !authUser 
+        ?
+        <AuthError />
+        :  
         <>
             <Row className='row p-4 account-header justify-content-end'>
-                <Col className='col-8 col-md-8 offset-md-1'><p>Circle Up</p></Col>
-                <Col className='col-4 col-md-2 offset-md-1'>
+                <Col className='col-12 col-md-6 offset-md-1'><p>Circle Up</p></Col>
+                <Col className='col-6 col-md-2'>
+                    <FirebaseContext.Consumer>
+                        {firebase => <ChangePassword firebase={firebase}/>}
+                    </FirebaseContext.Consumer>
+                </Col>
+                <Col className='col-6 col-md-2 offset-md-1'>
                     <FirebaseContext.Consumer>
                         {firebase => <SignOut firebase={firebase}/>}
                     </FirebaseContext.Consumer>

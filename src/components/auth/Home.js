@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from 'reactstrap';
 import Login from './Login';
 import CreateAccount from './CreateAccount';
 import FirebaseContext from '../firebase/context';
+import PasswordReset from './PasswordReset';
 
 
 const HomePage = () => {
@@ -19,6 +20,12 @@ const HomePage = () => {
         }
     }
 
+    const handlePasswordResetDisplay = (e) => {
+        e.preventDefault();
+        setCurrentComponent('Password Reset');
+        setSwitchText('Login');
+    }
+
     return (
     <>
         <Row className='login-header'>
@@ -32,7 +39,9 @@ const HomePage = () => {
                     <FirebaseContext.Consumer>
                         {currentComponent === 'Login' ? 
                             firebase => <Login firebase={firebase}/> :
-                            firebase => <CreateAccount firebase={firebase}/> 
+                            currentComponent === 'Create Account' ?
+                            firebase => <CreateAccount firebase={firebase}/> :
+                            firebase => <PasswordReset firebase={firebase}/> 
                         }
                     </FirebaseContext.Consumer>
                 </Col>
@@ -42,6 +51,13 @@ const HomePage = () => {
                     <Button color='light' onClick={handleChangeComponent}>{switchText}</Button>
                 </Col>
             </Row>
+            { currentComponent !== 'Password Reset' &&
+            <Row>
+                <Col className='text-center m-4'>
+                    <Button color='light' onClick={handlePasswordResetDisplay}>Forgot your password? Click to reset.</Button>
+                </Col>
+            </Row>
+            }
         </Container>
     </>
     );

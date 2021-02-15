@@ -28,6 +28,12 @@ class Firebase {
     doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
  
     doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
+
+    doReauthenticate = (password) => {
+        const user = this.auth.currentUser;
+        const credential = app.auth.EmailAuthProvider.credential(user.email, password);
+        return user.reauthenticateWithCredential(credential);
+    }
 }
 
 export default Firebase;
