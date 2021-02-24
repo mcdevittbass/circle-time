@@ -13,7 +13,7 @@ let stageHeight = window.innerHeight;
 const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, questionText }) => {
   const [itemIndex, setItemIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(-1);
-  const [randomNumbers, setRandomNumbers] = useState([...Array(items.length).keys()]);
+  const [randomNumbers, setRandomNumbers] = useState([]);
   
   useEffect(() => {
     //useEffect fires after component mounts or updates
@@ -23,6 +23,10 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
       window.removeEventListener('keyup', handleKeyUp);
     }
   });
+
+  useEffect(() => {
+    setRandomNumbers([...Array(items.length).keys()])
+  }, [items]);
 
   const handleKeyUp = (event) => {
     let currentItemIndex = itemIndex;
@@ -40,7 +44,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
         break;
       case 'r':
         event.preventDefault(); 
-        if(items.length) {
+        if(items.length && randomNumbers.length) {
           let randomIndex = randomNumbers.length === 1
             ? 0
             : Math.floor(Math.random() * (randomNumbers.length - 1) + 1);

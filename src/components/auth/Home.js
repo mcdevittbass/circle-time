@@ -40,7 +40,7 @@ const HomePage = () => {
                         {currentComponent === 'Login' ? 
                             firebase => <Login firebase={firebase}/> :
                             currentComponent === 'Create Account' ?
-                            firebase => <CreateAccount firebase={firebase}/> :
+                            firebase => <CreateAccount firebase={firebase} setCurrentComponent={setCurrentComponent}/> :
                             firebase => <PasswordReset firebase={firebase}/> 
                         }
                     </FirebaseContext.Consumer>

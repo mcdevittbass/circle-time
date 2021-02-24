@@ -1,0 +1,40 @@
+{
+    "users": {
+        "alovelace": {
+            "email": "alovelace@gmail.com",
+            "rooms": {
+                "roomID1": true
+            }
+        },
+        "mmcdevitt": {
+            "email": "mcdevittbass@gmail.com",
+            "rooms": {
+                "roomID1": true,
+                "roomID2": true
+            }
+        }
+    },
+    "rooms": {
+        "roomID1": {
+            "name": "The first official Circle Room",
+            "participants": [{"name": "John"}, {"name": "Jamie"}, {"name": "Betsy"}, {"name": "Megan"}],
+            "keywords": [{"keyword": "something"}],
+            "centerImage": "plate",
+            "question": "Is the sky really blue?",
+            "hosts": {
+                "alovelace": true,
+                "mcdevittbass": true
+            }
+        },
+        "roomID2": {
+            "name": "The second official Circle Room",
+            "participants": [{"name": "Megan"}],
+            "keywords": [{"keyword": "doubt"}],
+            "centerImage": "plate",
+            "question": "Is our concept of reality actually real?",
+            "hosts": {
+                "mcdevittbass": true
+            }
+        }
+    }
+}

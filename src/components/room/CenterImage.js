@@ -15,9 +15,12 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
   const [isCandleLoaded, setCandleLoaded] = useState(false);
 
   useEffect( () => {
-    console.log('plate: ' + isPlateLoaded);
-    console.log('candle: ' + isCandleLoaded);
-  });
+    // console.log('plate: ' + isPlateLoaded);
+    // console.log('candle: ' + isCandleLoaded);
+
+    if(plateImg.complete) setPlateLoaded(true);
+    if(candleImg.complete) setCandleLoaded(true);
+  },[]);
   
   const handlePlateLoad = () => {
     setPlateLoaded(true);
@@ -44,7 +47,7 @@ const CenterImage = ({ centerX, centerY, centerImg}) => {
 
   return (
       <>
-      {currentImgObj.load && (
+      {currentImgObj && currentImgObj.load && (
           <Image 
             image={currentImgObj.img}
             visible

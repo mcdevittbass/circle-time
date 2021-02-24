@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader } from 'reactstrap';
 
-const CreateAccount = (props) => {
+const CreateAccount = ({ firebase, setCurrentComponent }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCompare, setPasswordCompare] = useState('');
@@ -14,19 +14,27 @@ const CreateAccount = (props) => {
         password === '' ||
         email === '';
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault(); 
-        props.firebase
-            .doCreateUserWithEmailAndPassword(email, password)
-            .then(authUser => {
-                setEmail('');
-                setPassword('');
-                setPasswordCompare('');
-                history.push('/account');
-            })
-            .catch(err => {
+        //creates authorization
+        try {
+            const authUser = await firebase.doCreateUserWithEmailAndPassword(email, password)
+            try {
+                //adds user to realtime database
+                await firebase.user(authUser.user.uid)
+                    .set({
+                        email,
+                        rooms: {}
+                    });
+                clearForm();
+                setCurrentComponent('Login');
+                history.push('/home');
+            } catch(err) {
                 setError(err);
-            }); 
+            }
+        } catch(err) {
+                setError(err);
+            }; 
     }
 
     const handleInputChange = (e) => {
@@ -40,7 +48,7 @@ const CreateAccount = (props) => {
         //console.log(e.target.name + ': ' + e.target.value);
     }
 
-    const handleCancel = (e) => {
+    const clearForm = (e) => {
         setEmail('');
         setPassword('');
         setPasswordCompare('');
@@ -85,7 +93,7 @@ const CreateAccount = (props) => {
                     </FormGroup>
                     <FormGroup row>
                         <Col md={{size: 10, }} className='text-right'>
-                            <Button className='m-1' color="secondary" onClick={handleCancel}>Cancel</Button>
+                            <Button className='m-1' color="secondary" onClick={clearForm}>Cancel</Button>
                             <Button type="submit" className='btn submit-button' disabled={isInvalid}>
                                 Create Account
                             </Button>

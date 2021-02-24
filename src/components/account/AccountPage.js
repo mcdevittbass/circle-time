@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Button, Card, CardBody } from 'reactstrap';
 import CardTitle from 'reactstrap/lib/CardTitle';
 import FirebaseContext from '../firebase/context';
 import AuthError from '../auth/AuthError';
 import ChangePassword from '../auth/ChangePassword';
+import ParamsForm from '../room/ParamsForm';
 
 
 const SignOut = ({ firebase }) => {
@@ -20,12 +21,13 @@ const SignOut = ({ firebase }) => {
     )
 }
 
-const AccountPage = ( { authUser }) => {
+const AccountPage = ( { authUser, setRoomId }) => {
     const history = useHistory();
 
     const navToCircle = (e) => {
         history.push('/app');
     }
+    useEffect(() => console.log(authUser))
 
     return (
         !authUser 
@@ -48,7 +50,9 @@ const AccountPage = ( { authUser }) => {
             </Row>
 
             <Row className='row p-4 justify-content-center'>
-                <Button className='submit-button'> + New Room</Button>
+                <FirebaseContext.Consumer>
+                    {firebase => <ParamsForm firebase={firebase} authUser={authUser} setRoomId={setRoomId} roomParams={null}/>}
+                </FirebaseContext.Consumer>
             </Row>
 
             <Row className='row p-3 m-2'>

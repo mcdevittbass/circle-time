@@ -12,8 +12,10 @@ const Stick = (props) => {
   let stickCoordY = props.items.length ? props.items[props.itemIndex].y - 30 : null;
 
   useEffect(() => {
-      console.log('feather: ' + isFeatherLoaded);
-  })
+      //console.log('feather: ' + isFeatherLoaded);
+
+      if(featherImage.complete) setLoadFeather(true);
+  },[]);
 
   const handleFeatherLoad = () => {
     setLoadFeather(true);
