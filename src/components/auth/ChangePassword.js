@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, Form, Input, FormGroup, Label, Col } from 'reactstrap';
+import { FirebaseContext } from '../firebase/context';
 
-const ChangePassword = ({ firebase }) => {
+const ChangePassword = () => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [passwordCompare, setPasswordCompare] = useState('');
     const [error, setError] = useState(null);
     const [isModalOpen, setModal] = useState(false);
+
+    const firebase = useContext(FirebaseContext);
 
     let isInvalid = newPassword !== passwordCompare ||
         oldPassword === '' ||

@@ -58,22 +58,30 @@ class Firebase {
         
             try {
                 roomRef.set(params); //set paramaters of room object
-                this.user(uid).update({ ownedRooms: {[roomKey]: true}}); //add a ref in the main user's account
-                if(params.cohosts) {
-                    for(let userId in params.cohosts) { //add refs in cohost user accounts
-                        try {
-                        const snapshot = await this.user(userId).child("cohostedRooms").get();
-                        let updated = {};
-                        updated = snapshot.exists() 
-                            ? {...snapshot.val(), [roomKey]: true}
-                            : {[roomKey]: true};
+                try {
+                    const snap = await this.user(uid).child("ownedRooms").get();
+                    let updated = {};
+                    updated = snap.exists()
+                        ? {...snap.val(), [roomKey]: true}
+                        : {[roomKey]: true}
+                    this.user(uid).update({ownedRooms: updated}); //add a ref in the main user's account
+                    if(params.cohosts) {
+                        for(let userId in params.cohosts) { //add refs in cohost user accounts
+                            try {
+                            const snapshot = await this.user(userId).child("cohostedRooms").get();
+                            updated = snapshot.exists() 
+                                ? {...snapshot.val(), [roomKey]: true}
+                                : {[roomKey]: true};
 
-                        this.user(userId).update({ cohostedRooms: updated });
-                        
-                        } catch(err) {
-                            console.error(err);
+                            this.user(userId).update({ cohostedRooms: updated });
+                            
+                            } catch(err) {
+                                console.error(err);
+                            }
                         }
                     }
+                } catch(err) {
+                    console.error(err);
                 }
             } catch(err) {
                 console.error(err);

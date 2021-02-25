@@ -1,19 +1,22 @@
-import React, {useState, Fragment, useEffect} from 'react';
+import React, {useState, Fragment, useEffect, useContext} from 'react';
 import { useHistory } from 'react-router-dom';
-import { Form, Input, Label, Col, Button, Row, FormGroup, Modal, ModalBody, ModalHeader} from 'reactstrap';
-import FormText from 'reactstrap/lib/FormText';
+import { Form, Input, Label, Col, Button, Row, FormGroup, Modal, ModalBody, ModalHeader, FormText} from 'reactstrap';
+import { FirebaseContext } from '../firebase/context';
 
-const ParamsForm = ({ firebase, authUser, roomId, setRoomId, roomParams }) => {
+
+const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
     const [isModalOpen, setModal] = useState(false);
+    const [buttonText, setButtonText] = useState('+ Create a Room');
+    const [submitButtonText, setSubmitButtonText] = useState('Go to Room');
     const [title, setTitle] = useState('');
     const [currentCenterImg, setCurrentCenterImg] = useState('plate');
     const [tempQ, setTempQ] = useState('');
     const [participantInputs, setParticipantInputs] = useState([{name: '', keyword: ''}]);
     const [cohosts, setCohosts] = useState('');
-    const [buttonText, setButtonText] = useState('+ Create a Room');
-    const [submitButtonText, setSubmitButtonText] = useState('Go to Room');
 
     const history = useHistory();
+
+    const firebase = useContext(FirebaseContext);
 
     const toggleModal = () => setModal(!isModalOpen);
 
@@ -85,15 +88,16 @@ const ParamsForm = ({ firebase, authUser, roomId, setRoomId, roomParams }) => {
         setParticipantInputs(values);
     }
 
-    const handleCancel = () => {
+    const handleCancel = (e) => {
+        e.preventDefault();
         if(!roomParams) {
             setTitle('');
             setCurrentCenterImg('plate');
             setTempQ('');
             setParticipantInputs([{name: '', keyword: ''}]);
             setCohosts('');
-            toggleModal();
         }
+        toggleModal();
     }
 
     //helper function to get userIds of cohosts
@@ -133,6 +137,7 @@ const ParamsForm = ({ firebase, authUser, roomId, setRoomId, roomParams }) => {
                     console.error(err);
                 }
             }
+            let today = new Date().toJSON();
             params = {
                 title: title,
                 participants: participantInputs.map(part => part.name ? {name: part.name} : {name: ""}) || [],
@@ -140,7 +145,8 @@ const ParamsForm = ({ firebase, authUser, roomId, setRoomId, roomParams }) => {
                 centerImage: currentCenterImg,
                 question: tempQ,
                 host: thisUser,
-                cohosts: otherHosts
+                cohosts: otherHosts,
+                date: today
             }
             if(!roomParams) {
                 try{

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row } from 'reactstrap';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { Container, Row, Col, Button } from 'reactstrap';
 import CircleStage from './Stage';
 import AuthError from '../auth/AuthError';
 import ParamsForm from './ParamsForm';
+import { FirebaseContext } from '../firebase/context';
 
-function Main({ authUser, roomId, setRoomId, firebase }) {
+function Main({ authUser, roomId, setRoomId }) {
   const colorPalette = ['#020887', '#6D326D', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
 
   const [roomParams, setRoomParams] = useState(null);
@@ -17,6 +19,8 @@ function Main({ authUser, roomId, setRoomId, firebase }) {
   const [items, setItems] = useState(setCirclePositions(initialItems));
   const [wordItems, setWordItems] = useState(keywords.map(word => generateWordItems(word)));
   const [questionText, setQuestionText] = useState('');
+
+  const firebase = useContext(FirebaseContext);
 
   async function listenToRoom (roomId) {
     if(!roomId) return null;
@@ -120,13 +124,19 @@ function Main({ authUser, roomId, setRoomId, firebase }) {
     <>
         <Container fluid className='App m-0 p-0' style={{backgroundColor: '#fff'}}> 
             <Row>
-                <ParamsForm 
-                  firebase={firebase} 
-                  authUser={authUser} 
-                  roomId={roomId} 
-                  setRoomId={setRoomId} 
-                  roomParams={roomParams}
-                />
+                <Col>
+                  <Link to={'/account'}>
+                    <Button style={{backgroundColor: '#0C595E'}} className='m-2'>Return to Main Page</Button>
+                  </Link>
+                </Col>
+                <Col>
+                    <ParamsForm  
+                      authUser={authUser} 
+                      roomId={roomId} 
+                      setRoomId={setRoomId} 
+                      roomParams={roomParams}
+                    />
+                </Col>
             </Row>
             <Row style={{margin: 0}}> 
                 <CircleStage 

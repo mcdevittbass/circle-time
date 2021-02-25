@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader} from 'reactstrap';
+import FirebaseContext from '../firebase/context';
 
-const PasswordReset = ({ firebase }) => {
+const PasswordReset = () => {
     const [email, setEmail] = useState('');
     const [error, setError] = useState(null);
     const [done, setDone] = useState(false);
+
+    const firebase = useContext(FirebaseContext);
 
     const isInvalid = email === '';
 

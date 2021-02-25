@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import Main from './components/room/Main';
 import HomePage from './components/auth/Home';
 import AccountPage from './components/account/AccountPage';
+import { FirebaseContext } from './components/firebase/context';
 
-function App({ firebase }) {
+function App() {
   const [authUser, setAuthUser] = useState(null);
   const [roomId, setRoomId] = useStickyState(null, 'roomId');
+
+  const firebase = useContext(FirebaseContext);
 
   //check for authorization
   useEffect(() => {
@@ -26,8 +29,8 @@ function App({ firebase }) {
       <Router>
         <Switch>
           <Route path='/home' component={HomePage} />
-          <Route path='/account' render={() => <AccountPage authUser={authUser} setRoomId={setRoomId}/>} />
-          <Route path='/app' render={() =><Main authUser={authUser} roomId={roomId} setRoomId={setRoomId} firebase={firebase}/>} />
+          <Route path='/account' render={() => <AccountPage authUser={authUser} roomId={roomId} setRoomId={setRoomId}/>} />
+          <Route path='/app' render={() =><Main authUser={authUser} roomId={roomId} setRoomId={setRoomId} />} />
           <Redirect to='/home' />
         </Switch>  
       </Router>
