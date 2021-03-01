@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Button } from 'reactstrap';
-import FirebaseContext from '../firebase/context';
+import { FirebaseContext } from '../firebase/context';
 import AuthError from '../auth/AuthError';
 import ChangePassword from '../auth/ChangePassword';
 import ParamsForm from '../room/ParamsForm';
@@ -11,7 +11,7 @@ import RoomCard from '../room/RoomCard';
 const SignOut = () => {
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
-
+    
     const handleSignout = (e) => {
         firebase.doSignOut();
         history.push('/home');

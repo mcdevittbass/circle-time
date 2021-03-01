@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import Login from './Login';
 import CreateAccount from './CreateAccount';
-import FirebaseContext from '../firebase/context';
+import { FirebaseContext } from '../firebase/context';
 import PasswordReset from './PasswordReset';
 
 
 const HomePage = () => {
     const [currentComponent, setCurrentComponent] = useState('Login');
     const [switchText, setSwitchText] = useState('Don\'t have an account? Create One');
+
+    const firebase = useContext(FirebaseContext);
 
     const handleChangeComponent = (e) => {
         if(currentComponent  === 'Login') {
@@ -36,14 +38,14 @@ const HomePage = () => {
         <Container className='container-fluid'>
             <Row style={{padding: 3, justifyContent: 'center'}}>
                 <Col sm={6}>
-                    <FirebaseContext.Consumer>
+
                         {currentComponent === 'Login' ? 
-                            firebase => <Login firebase={firebase}/> :
+                            <Login firebase={firebase}/> :
                             currentComponent === 'Create Account' ?
-                            firebase => <CreateAccount firebase={firebase} setCurrentComponent={setCurrentComponent}/> :
-                            firebase => <PasswordReset firebase={firebase}/> 
+                            <CreateAccount firebase={firebase} setCurrentComponent={setCurrentComponent}/> :
+                            <PasswordReset firebase={firebase}/> 
                         }
-                    </FirebaseContext.Consumer>
+ 
                 </Col>
             </Row>
             <Row>
