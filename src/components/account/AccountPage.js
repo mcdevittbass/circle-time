@@ -73,7 +73,9 @@ const AccountPage = ( { authUser, roomId, setRoomId }) => {
                 <Card body className='text-center'>
                     <CardTitle><h5>My Rooms</h5></CardTitle>
                     <CardText>
-                        <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='owned'/>
+                        <Row>
+                            <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='owned'/>
+                        </Row>
                     </CardText>
                 </Card>
             </Row>

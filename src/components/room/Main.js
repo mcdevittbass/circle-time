@@ -5,6 +5,7 @@ import CircleStage from './Stage';
 import AuthError from '../auth/AuthError';
 import ParamsForm from './ParamsForm';
 import { FirebaseContext } from '../firebase/context';
+import InstructionsModal from './InstructionsModal';
 
 function Main({ authUser, roomId, setRoomId }) {
   const colorPalette = ['#020887', '#6D326D', '#D56062', '#F37748', '#ECC30B', '#84BCDA', '#5E7416', '#0C595E'];
@@ -165,13 +166,16 @@ function Main({ authUser, roomId, setRoomId }) {
     :
     <>
         <Container fluid className='App m-0 p-0' style={{backgroundColor: '#fff'}}> 
-            <Row>
-                <Col>
-                  <Link to={'/account'}>
-                    <Button style={{backgroundColor: '#0C595E'}} className='m-2'>Return to Main Page</Button>
+            <Row className='justify-content-between'>
+                <Col sm={3}>
+                  <Link to={'/account'} className='m-0 p-0'>
+                    <Button className='m-2 btn-light'> ← Return to Main Page</Button>
                   </Link>
                 </Col>
                 <Col>
+                  <InstructionsModal />
+                </Col>
+                <Col sm={3}>
                     <ParamsForm  
                       authUser={authUser} 
                       roomId={roomId} 

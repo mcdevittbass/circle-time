@@ -16,7 +16,6 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
     const [cohosts, setCohosts] = useState('');
 
     const history = useHistory();
-
     const firebase = useContext(FirebaseContext);
 
     const toggleModal = () => setModal(!isModalOpen);
@@ -26,7 +25,8 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
             setTitle(roomParams.title);
             setCurrentCenterImg(roomParams.centerImage);
             if(roomParams.question) setTempQ(roomParams.question);
-            setParticipantInputs(roomParams.participants);
+            const participants = roomParams.participants.map((obj, i) => ( {name: obj.name, keyword: roomParams.keywords[i].keyword} ))
+            setParticipantInputs(participants);
             if(roomParams.cohosts) {
                 (async () => {
                     const cohostEmails = [];
@@ -175,13 +175,9 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
 
     return (
         <React.Fragment>
-            <Row style={{marginLeft: 15, marginTop: 10}}>
-                <Col>
-                    <Button style={{backgroundColor: '#0C595E'}} onClick={toggleModal} className='m-2'>
-                        {buttonText}
-                    </Button>
-                </Col>
-            </Row>
+            <Button style={{backgroundColor: '#0C595E'}} onClick={toggleModal} className='m-2'>
+                {buttonText}
+            </Button>
             <Modal returnFocusAfterClose={false} isOpen={isModalOpen} toggle={toggleModal} className='modal-lg'>
                 <ModalHeader toggle={toggleModal}>Design your Circle Room</ModalHeader>
                 <ModalBody style={{margin: 'auto'}}>
