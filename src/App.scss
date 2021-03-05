@@ -9,6 +9,16 @@ $main-font: 'Ubuntu', sans-serif;
   font-family: $main-font;
   font-size: 60px;
 }
+.hello {
+  margin: auto;
+  padding: 0.5em;
+  font-family: $main-font;
+}
+.instructions-card {
+  width: 75%;
+  margin: auto;
+  padding: 0;
+}
 .login-header {
   font-family: $main-font;
   background-color: $primary; 
@@ -21,11 +31,9 @@ $main-font: 'Ubuntu', sans-serif;
 .title-text {
   color: $secondary;
 }
-
-.instructions-card {
-  width: 75%;
-  margin: auto;
-  padding: 0;
+.test {
+  border: 2px solid black
 }
+
 
 

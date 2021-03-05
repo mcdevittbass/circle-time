@@ -19,11 +19,9 @@ const DeleteModal = ({ roomRelation, toggleModal, handleDelete, isModalOpen }) =
     
     return (
         <React.Fragment>
-            <Row style={{marginLeft: 15, marginTop: 10}}>
-                <Col>
-                    <button className='btn-close' type='button' title={tooltipText} onClick={toggleModal}></button>
-                </Col>
-            </Row>
+            <Col>
+                <button className='btn-close' type='button' title={tooltipText} onClick={toggleModal}></button>
+            </Col>
             <Modal returnFocusAfterClose={false} isOpen={isModalOpen} toggle={toggleModal} className='modal-lg'>
                 <ModalHeader toggle={toggleModal}>Delete Room</ModalHeader>
                 <ModalBody style={{margin: 'auto'}}>

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Col, Card, CardTitle, CardBody, Button, CardHeader, Row } from 'reactstrap';
+import { Col, Card, CardTitle, CardBody, Button, CardText, Row } from 'reactstrap';
 import { FirebaseContext } from '../firebase/context';
 import DeleteModal from './DeleteModal';
 import ConfirmDelete from './ConfirmDelete';
@@ -153,33 +153,28 @@ const RoomCard = ({ roomId, setRoomId, authUser, roomRelation }) => {
         rooms.length ? rooms.map(room => {
             return (
                 <Col className='col col-sm-4' key={room.key}>
-                    <Card>
-                        <CardHeader>
-                            <Row className='p-2 align-content-center'>
-                                <Col>
-                                    <CardTitle>{room.title}</CardTitle>
-                                </Col>
-                                <Col className='col-sm-3'>
-                                    <DeleteModal 
-                                        roomRelation={roomRelation} 
-                                        toggleModal={toggleModal} 
-                                        handleDelete={(e) => handleDelete(e, room.key)} 
-                                        isModalOpen={isModalOpen}
-                                    />
-                                </Col>
-                            </Row> 
-                        </CardHeader>
-                        <CardBody>
-                            
-                            <CardBody>{room.date}</CardBody>
-                            <Button className='submit-button' onClick={(e) => navToCircle(e, room)}>Go to room</Button>
-                            <ConfirmDelete roomId={room.key} authUser={authUser} isModalOpen={isSecondModalOpen} setModal={setSecondModal}/>
-                        </CardBody>
+                    <Card body>
+                        <Row>
+                            <Col className='col-sm-2 offset-9 p-2'>
+                                <DeleteModal 
+                                    roomRelation={roomRelation} 
+                                    toggleModal={toggleModal} 
+                                    handleDelete={(e) => handleDelete(e, room.key)} 
+                                    isModalOpen={isModalOpen}
+                                />
+                            </Col>
+                        </Row>
+                        <CardTitle><h4>{room.title}</h4></CardTitle>
+                        <CardText>{room.date}</CardText>
+                        <Button className='submit-button p-1' onClick={(e) => navToCircle(e, room)}>Go to room</Button>
+    
+                        <ConfirmDelete roomId={room.key} authUser={authUser} isModalOpen={isSecondModalOpen} setModal={setSecondModal}/>
+                
                     </Card>
                 </Col>
             )
         })
-        : <p>No rooms to display</p>
+        : <p>No rooms to display yet...</p>
     )
 }
 

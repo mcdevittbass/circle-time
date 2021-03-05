@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Row, Col, Button } from 'reactstrap';
+import { Row, Col, Button, Card, CardTitle, CardText } from 'reactstrap';
 import { FirebaseContext } from '../firebase/context';
 import AuthError from '../auth/AuthError';
 import ChangePassword from '../auth/ChangePassword';
@@ -55,7 +55,7 @@ const AccountPage = ( { authUser, roomId, setRoomId }) => {
             </Row>
 
             <Row>
-                <Col className='col-12 col-md-2'>Hi, {userName}!</Col>
+                <Col className='text-center hello'><h5>Hi, {userName}!</h5></Col>
             </Row>
 
             <Row>
@@ -63,22 +63,28 @@ const AccountPage = ( { authUser, roomId, setRoomId }) => {
             </Row>
 
             {/*Button with modal to create room*/}
-            <Row className='row p-4 justify-content-center'>
-                <ParamsForm authUser={authUser} setRoomId={setRoomId} roomParams={null}/>
+            <Row className='row p-4'>
+                <Col className='text-center p-0'>
+                    <ParamsForm authUser={authUser} setRoomId={setRoomId} roomParams={null}/>
+                </Col>
             </Row>
 
-            <Row className='row p-3 m-2'>
-                <p>My Rooms</p>
-            </Row>
-            <Row className='row p-3 m-2'>
-                <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='owned'/>
+            <Row>
+                <Card body className='text-center'>
+                    <CardTitle><h5>My Rooms</h5></CardTitle>
+                    <CardText>
+                        <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='owned'/>
+                    </CardText>
+                </Card>
             </Row>
 
-            <Row className='row p-3 m-2'>
-                <p>Rooms shared with me</p>
-            </Row>
-            <Row className='row p-3 m-2'>
-                <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='cohosted'/>
+            <Row>
+                <Card body className='text-center'>
+                    <CardTitle><h5>Rooms shared with me</h5></CardTitle>
+                    <CardText>
+                        <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='cohosted'/>
+                    </CardText>
+                </Card>
             </Row>
         </>
     );

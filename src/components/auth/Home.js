@@ -35,14 +35,12 @@ const HomePage = () => {
         <Container className='container-fluid'>
             <Row style={{padding: 3, justifyContent: 'center'}}>
                 <Col sm={6}>
-
-                        {currentComponent === 'Login' ? 
-                            <Login /> :
-                            currentComponent === 'Create Account' ?
-                            <CreateAccount setCurrentComponent={setCurrentComponent}/> :
-                            <PasswordReset /> 
-                        }
- 
+                    {currentComponent === 'Login' ? 
+                        <Login /> :
+                        currentComponent === 'Create Account' ?
+                        <CreateAccount setCurrentComponent={setCurrentComponent}/> :
+                        <PasswordReset /> 
+                    }
                 </Col>
             </Row>
             <Row>
@@ -51,11 +49,11 @@ const HomePage = () => {
                 </Col>
             </Row>
             { currentComponent !== 'Password Reset' &&
-            <Row>
-                <Col className='text-center m-4'>
-                    <Button color='light' onClick={handlePasswordResetDisplay}>Forgot your password? Click to reset.</Button>
-                </Col>
-            </Row>
+                <Row>
+                    <Col className='text-center m-4'>
+                        <Button color='light' onClick={handlePasswordResetDisplay}>Forgot your password? Click to reset.</Button>
+                    </Col>
+                </Row>
             }
         </Container>
     </>
