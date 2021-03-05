@@ -97,7 +97,7 @@ const ChangePassword = () => {
                             <Col md={{size: 10, }} className='text-right'>
                                 <Button className='m-1' color="secondary" onClick={handleCancel}>Cancel</Button>
                                 <Button type="submit" className='btn submit-button' disabled={isInvalid}>
-                                    Create Account
+                                    Change Password
                                 </Button>
                             </Col>
                         </FormGroup>

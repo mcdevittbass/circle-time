@@ -16,6 +16,7 @@ const DeleteModal = ({ roomRelation, toggleModal, handleDelete, isModalOpen }) =
         }
     }, [roomRelation]);
 
+    
     return (
         <React.Fragment>
             <Row style={{marginLeft: 15, marginTop: 10}}>
@@ -27,7 +28,9 @@ const DeleteModal = ({ roomRelation, toggleModal, handleDelete, isModalOpen }) =
                 <ModalHeader toggle={toggleModal}>Delete Room</ModalHeader>
                 <ModalBody style={{margin: 'auto'}}>
                     <Row className='mb-3'>
-                        {questionText}
+                        <Col>
+                            {questionText}
+                        </Col>
                     </Row>
                     <Row>
                         <Col className='d-flex justify-content-end'>

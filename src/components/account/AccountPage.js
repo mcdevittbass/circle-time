@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Row, Col, Button } from 'reactstrap';
 import { FirebaseContext } from '../firebase/context';
 import AuthError from '../auth/AuthError';
 import ChangePassword from '../auth/ChangePassword';
 import ParamsForm from '../room/ParamsForm';
-import RoomCard from '../room/RoomCard';
+import RoomCard from './RoomCard';
+import Instructions from '../room/Instructions';
 
 
 const SignOut = () => {
@@ -23,6 +24,19 @@ const SignOut = () => {
 }
 
 const AccountPage = ( { authUser, roomId, setRoomId }) => {
+    const [userName, setUserName] = useState('');
+
+    const firebase = useContext(FirebaseContext);
+
+    useEffect(() => {
+        if(authUser) {
+            (async () => {
+                const snapshot = await firebase.user(authUser.uid).child("name").get();
+                const name = snapshot.val();
+                setUserName(name);
+            })();
+        }
+    }, [firebase, authUser])
     return (
         !authUser 
         ?
@@ -38,6 +52,14 @@ const AccountPage = ( { authUser, roomId, setRoomId }) => {
                 <Col className='col-6 col-md-2 offset-md-1'>
                     <SignOut />  
                 </Col>
+            </Row>
+
+            <Row>
+                <Col className='col-12 col-md-2'>Hi, {userName}!</Col>
+            </Row>
+
+            <Row>
+                <Instructions />
             </Row>
 
             {/*Button with modal to create room*/}

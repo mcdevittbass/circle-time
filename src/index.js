@@ -8,9 +8,7 @@ import FirebaseContextProvider from './components/firebase/context';
 
 ReactDOM.render(
   <FirebaseContextProvider>
-
-       <App />
-
+    <App />
   </FirebaseContextProvider>,
   document.getElementById('root')
 );

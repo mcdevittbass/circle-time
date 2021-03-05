@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader} from 'reactstrap';
+import { FirebaseContext } from '../firebase/context';
 
-const Login = ({ firebase }) => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
 
     const history = useHistory();
+    const firebase = useContext(FirebaseContext);
 
     const isInvalid = email === '' || password === '';
 

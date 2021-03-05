@@ -1,8 +1,9 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import { Stage, Layer, Circle, Text, Group } from 'react-konva';
 import Stick from './Stick';
 import CenterImage from './CenterImage';
 import Question from './Question';
+import { FirebaseContext } from '../firebase/context';
 
 //to do: set up dragging for keywords so that position persists on reload
 // let centerX = window.innerWidth/2;
@@ -10,10 +11,12 @@ import Question from './Question';
 let stageWidth = window.innerWidth;
 let stageHeight = window.innerHeight;
 
-const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, questionText }) => {
+const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, questionText, roomId, wordIndex, setWordIndex, lastWords}) => {
   const [itemIndex, setItemIndex] = useState(0);
-  const [wordIndex, setWordIndex] = useState(-1);
   const [randomNumbers, setRandomNumbers] = useState([]);
+  const [stickCoords, setStickCoords] = useState({x: null, y: null});
+
+  const firebase = useContext(FirebaseContext);
   
   useEffect(() => {
     //useEffect fires after component mounts or updates
@@ -25,8 +28,33 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
   });
 
   useEffect(() => {
-    setRandomNumbers([...Array(items.length).keys()])
-  }, [items]);
+    (async () => {
+      try {
+        firebase.room(roomId).on('value', async (snapshot) => {
+          const params = await snapshot.val();
+          if(params) {
+            const { randomArray, keywordIndex } = params;
+            const stickIndex = params.stickIndex ? params.stickIndex : 0;
+            setItemIndex(stickIndex);
+            setRandomNumbers(randomArray);
+            setWordIndex(keywordIndex);
+          } 
+        })
+      } catch(err) {
+        console.error(err);
+      }
+    })();
+    return () => {
+      firebase.room(roomId).child('stickIndex').off();
+    }
+    
+  }, [items, firebase, roomId])
+
+  useEffect(() => {
+    let stickCoordX = items.length ? items[itemIndex].x - 40 : null;
+    let stickCoordY = items.length ? items[itemIndex].y - 30 : null;
+    setStickCoords({x: stickCoordX, y: stickCoordY});
+  }, [itemIndex, items])
 
   const handleKeyUp = (event) => {
     let currentItemIndex = itemIndex;
@@ -35,24 +63,24 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
       case 'ArrowRight':
         event.preventDefault();
         let addIndex = itemIndex === items.length - 1 ? 0 : currentItemIndex + 1;
-        setItemIndex(addIndex);
+        firebase.room(roomId).update({stickIndex: addIndex});
         break;
       case 'ArrowLeft': 
         event.preventDefault();
         let minusIndex = itemIndex === 0 ? items.length - 1 : currentItemIndex - 1;
-        setItemIndex(minusIndex);
+        firebase.room(roomId).update({stickIndex: minusIndex});
         break;
-      case 'r':
+      case '\\':
         event.preventDefault(); 
         if(items.length && randomNumbers.length) {
           let randomIndex = randomNumbers.length === 1
             ? 0
             : Math.floor(Math.random() * (randomNumbers.length - 1) + 1);
-          setItemIndex(randomNumbers[randomIndex]);
+          firebase.room(roomId).update({stickIndex: randomNumbers[randomIndex]})
           if(randomNumbers.length <= 1) {
-            setRandomNumbers([...Array(items.length).keys()])
+            firebase.room(roomId).update({randomArray: [...Array(items.length).keys()]})
           } else {
-            setRandomNumbers(randomNumbers.filter(num => num !== randomNumbers[randomIndex]));
+            firebase.room(roomId).update({randomArray: randomNumbers.filter(num => num !== randomNumbers[randomIndex])});
           }
           console.log(randomNumbers[randomIndex]);
         };
@@ -60,21 +88,14 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
       case " " || "Spacebar":
         event.preventDefault();  
         if(wordItems.length) {
-          let updatedWordIndex = wordIndex < 0 || wordIndex >= wordItems.length ? 0 : wordIndex;
-          wordItems[updatedWordIndex].x = centerX - 50;
-          wordItems[updatedWordIndex].y = centerY - 15;
-
+          let newKeywordIndex;
           if(wordIndex <= wordItems.length && wordIndex >= 0) {
-            let lastWordIndex = wordIndex === 0 ? wordItems.length - 1 : wordIndex - 1;
-            console.log(lastWordIndex)
-            let centerRadius = 140;
-            let length = wordItems.length;
-            let angle = (lastWordIndex/length)*Math.PI*2;
-            wordItems[lastWordIndex].x = Math.cos(angle)*centerRadius + centerX - 40;
-            wordItems[lastWordIndex].y = Math.sin(angle)*centerRadius + centerY;
-            setWordIndex(wordIndex === wordItems.length - 1 ? 0 : wordIndex + 1);
+            let updatedLastWords = wordIndex === 0 ? [0] : [...lastWords, wordIndex];
+            newKeywordIndex = wordIndex === wordItems.length - 1 ? -1 : wordIndex + 1;
+            firebase.room(roomId).update({keywordIndex: newKeywordIndex, lastWords: updatedLastWords})
           } else {
-            setWordIndex(wordItems.length > 0 ? 1 : -1);
+            newKeywordIndex =  wordItems.length < 0 ? -1 : wordIndex < 0 ? 0 : wordIndex + 1;
+            firebase.room(roomId).update({keywordIndex: newKeywordIndex, lastWords: [-1]});
           }
         }
         break;
@@ -159,7 +180,7 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
               )}  
           </Layer>
           <Layer>
-            <Stick items={items} itemIndex={itemIndex}/>
+            <Stick stickCoords={stickCoords}/>
           </Layer>
         </Stage>
     );

@@ -14,11 +14,14 @@ function Main({ authUser, roomId, setRoomId }) {
   const [centerX] = useState(window.innerWidth/2);
   const [centerY] = useState(window.innerHeight/2)
   const [names, setNames] = useState([]);
-  const [keywords, setKeywords] = useState([]);
+  const [words, setWords] = useState([]);
   const [initialItems, setInitialItems] = useState(names.map((name, i) => generateItems(name, i)));
   const [items, setItems] = useState(setCirclePositions(initialItems));
-  const [wordItems, setWordItems] = useState(keywords.map(word => generateWordItems(word)));
+  const [initialWordItems, setInitialWordItems] = useState([])
+  const [wordItems, setWordItems] = useState([]);
   const [questionText, setQuestionText] = useState('');
+  const [wordIndex, setWordIndex] = useState(-1);
+  const [lastWords, setLastWords] = useState([]);
 
   const firebase = useContext(FirebaseContext);
 
@@ -59,12 +62,19 @@ function Main({ authUser, roomId, setRoomId }) {
     }
   },[roomId, centerX, firebase]);
 
+
   useEffect(() => {
     if(roomParams) {
-      const { centerImage, participants, keywords, question } = roomParams;
+      const { centerImage, participants, keywords, question, lastWords } = roomParams;
       setCenterImg(centerImage);
       if(participants) setNames(participants.map(obj => obj.name));
-      if(keywords) setKeywords(keywords.map(obj => obj.name));
+      if(keywords) {
+        const justWords = keywords.map(obj => obj.keyword);
+        if(JSON.stringify(justWords) !== JSON.stringify(words)) {
+          setWords(keywords.map(obj => obj.keyword));
+        }
+      }
+      setLastWords(lastWords || []);
       setQuestionText(question);
     } else {
       console.log('Params was not truthy');
@@ -73,12 +83,16 @@ function Main({ authUser, roomId, setRoomId }) {
 
   useEffect(() => {
     setInitialItems(names.map((name, i) => generateItems(name, i)));
-    setWordItems(keywords.map(word => generateWordItems(word)));
-  }, [names, keywords]);
+    setInitialWordItems(words.map(word => generateWordItems(word)));
+  }, [names, words]);
 
   useEffect(() => {
     setItems(setCirclePositions(initialItems));
   }, [initialItems]);
+
+  useEffect(() => {
+    setWordItems(setWordPostions(initialWordItems));
+  }, [initialWordItems])
 
  
   function setCirclePositions(shapeArr) {
@@ -108,13 +122,41 @@ function Main({ authUser, roomId, setRoomId }) {
 
   function generateWordItems(newWord) {
     let word = {
-      color: colorPalette[keywords.length % 8],
+      color: colorPalette[words.length % 8],
       text: newWord,
-      x: 20,
-      y: Math.random() * (window.innerHeight - 30)
+      // x: 20,
+      // y: Math.random() * (window.innerHeight - 30)
     }
     return word;
   };
+
+  function setWordPostions(wordItemArr) {
+    const updated = wordItemArr.map((item, i) => {
+      //if word index is the current word, put it in the center
+      if (wordIndex === -1) { //if wordIndex is the default, put all words on the side
+        item.x = 20;
+        item.y = i*30;
+      } else if(wordIndex === i) {
+        item.x = centerX - 50;
+        item.y = centerY - 15;
+      } else {
+        // set the other words around the circle FIX THIS
+        let centerRadius = 140;
+        let length = wordItems.length;
+        let lastWordIndex = lastWords[i];
+        if(lastWordIndex !== undefined) {
+          let angle = (i/length)*Math.PI*2;
+          item.x = Math.cos(angle)*centerRadius + centerX - 40;
+          item.y = Math.sin(angle)*centerRadius + centerY;
+        } else {
+          item.x = 20;
+          item.y = i*30;
+        }
+      }
+      return item;
+    });
+    return updated;
+  }
 
   return (
     !authUser 
@@ -143,10 +185,15 @@ function Main({ authUser, roomId, setRoomId }) {
                     items={items} 
                     setItems={setItems} 
                     wordItems={wordItems} 
+                    setWordItems={setWordItems}
                     centerX={centerX} 
                     centerY={centerY} 
                     centerImg={centerImg}
                     questionText={questionText}
+                    roomId={roomId}
+                    wordIndex={wordIndex}
+                    setWordIndex={setWordIndex}
+                    lastWords={lastWords}
                 />
             </Row>
         </Container>

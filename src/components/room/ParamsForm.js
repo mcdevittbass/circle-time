@@ -2,6 +2,7 @@ import React, {useState, Fragment, useEffect, useContext} from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Label, Col, Button, Row, FormGroup, Modal, ModalBody, ModalHeader, FormText} from 'reactstrap';
 import { FirebaseContext } from '../firebase/context';
+import CSVUpload from './CSVUpload';
 
 
 const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
@@ -33,14 +34,13 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
                         const snapshot = await firebase.user(host).child("email").get();
                         if(snapshot.exists()) {
                             const email = snapshot.val();
-                            console.log(email);
                             cohostEmails.push(email);
                         } 
                     }
                     setCohosts(cohostEmails.join(', '));
                 })();
             }
-            setButtonText('Update Your Room');
+            setButtonText('Update Room');
             setSubmitButtonText('Update Room');
         } 
     }, [roomParams, firebase])
@@ -101,7 +101,7 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
     }
 
     //helper function to get userIds of cohosts
-    const makeHosts = async (cohostArr, otherHosts) => {
+    const getHosts = async (cohostArr, otherHosts) => {
         for(let cohost of cohostArr) {
             try {
                 const response = await 
@@ -132,7 +132,7 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
             //get user id for each host
             if(cohosts) {
                 try {
-                    otherHosts = await makeHosts(cohostArr, otherHosts);
+                    otherHosts = await getHosts(cohostArr, otherHosts);
                 } catch(err) {
                     console.error(err);
                 }
@@ -146,7 +146,11 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
                 question: tempQ,
                 host: thisUser,
                 cohosts: otherHosts,
-                date: today
+                date: today,
+                stickIndex: 0,
+                randomArray: [...Array(participantInputs.length).keys()],
+                keywordIndex: -1,
+                lastWords: []
             }
             if(!roomParams) {
                 try{
@@ -220,6 +224,9 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
                                 /> 
                             </Label>  
                         </FormGroup>      
+                    </Row>
+                    <Row className='form-group px-5 m-0'>
+                        <CSVUpload participantInputs={participantInputs} setParticipantInputs={setParticipantInputs}/>
                     </Row>
                     <Row className='form-group px-5 m-0'>
                         <FormGroup>

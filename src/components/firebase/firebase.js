@@ -98,14 +98,15 @@ class Firebase {
         roomRef.update(params);
         (async () => {
             if(Object.keys(params.cohosts).length) {
+                console.log(params.cohosts);
                 for(let host in params.cohosts) {
+                    console.log(host);
                     try {
                         const snapshot = await this.user(host).child("cohostedRooms").get();
-                        if(snapshot.exists()) {
-                            const cohostedRooms = snapshot.val();
-                            if(!Object.keys(cohostedRooms).includes(roomId)) {
-                                this.user(host).child("cohostedRooms").update({[roomId]: true})
-                            }
+                        const cohostedRooms = snapshot.val() || {};
+                        if(!Object.keys(cohostedRooms).includes(roomId)) {
+                            cohostedRooms[roomId] = true;
+                            this.user(host).update({cohostedRooms: cohostedRooms})
                         }
                     } catch(err) {
                         console.error(err);

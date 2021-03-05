@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader } from 'reactstrap';
+import { FirebaseContext } from '../firebase/context';
 
-const CreateAccount = ({ firebase, setCurrentComponent }) => {
+const CreateAccount = ({ setCurrentComponent }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCompare, setPasswordCompare] = useState('');
+    const [name, setName] = useState('');
     const [error, setError] = useState(null);
 
     const history = useHistory();
+    const firebase = useContext(FirebaseContext);
 
     let isInvalid = password !== passwordCompare ||
         password === '' ||
-        email === '';
+        email === '' ||
+        name === '';
 
     const handleSubmit = async (e) => {
         e.preventDefault(); 
@@ -24,6 +28,7 @@ const CreateAccount = ({ firebase, setCurrentComponent }) => {
                 await firebase.user(authUser.user.uid)
                     .set({
                         email,
+                        name,
                         rooms: {}
                     });
                 clearForm();
@@ -44,6 +49,8 @@ const CreateAccount = ({ firebase, setCurrentComponent }) => {
             setPassword(e.target.value);
         } else if(e.target.name === 'passwordCompare') {
             setPasswordCompare(e.target.value);
+        } else {
+            setName(e.target.value);
         }
         //console.log(e.target.name + ': ' + e.target.value);
     }
@@ -61,6 +68,16 @@ const CreateAccount = ({ firebase, setCurrentComponent }) => {
             </CardHeader>
             <CardBody>
                 <Form id="loginForm" onSubmit={handleSubmit}>
+                    <FormGroup className="row">
+                        <Col>
+                            <Label className="col-form-label" htmlFor="email">Name</Label>
+                        </Col>
+                        <Col className="col-sm-8">
+                            <Input type="text" id="name" name="name" placeholder="What would you like us to call you?"
+                            value={name}
+                            onChange={handleInputChange} />
+                        </Col>
+                    </FormGroup>
                     <FormGroup className="row">
                         <Col>
                             <Label className="col-form-label" htmlFor="email">Email</Label>

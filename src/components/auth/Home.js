@@ -1,16 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 import Login from './Login';
 import CreateAccount from './CreateAccount';
-import { FirebaseContext } from '../firebase/context';
 import PasswordReset from './PasswordReset';
 
 
 const HomePage = () => {
     const [currentComponent, setCurrentComponent] = useState('Login');
     const [switchText, setSwitchText] = useState('Don\'t have an account? Create One');
-
-    const firebase = useContext(FirebaseContext);
 
     const handleChangeComponent = (e) => {
         if(currentComponent  === 'Login') {
@@ -40,10 +37,10 @@ const HomePage = () => {
                 <Col sm={6}>
 
                         {currentComponent === 'Login' ? 
-                            <Login firebase={firebase}/> :
+                            <Login /> :
                             currentComponent === 'Create Account' ?
-                            <CreateAccount firebase={firebase} setCurrentComponent={setCurrentComponent}/> :
-                            <PasswordReset firebase={firebase}/> 
+                            <CreateAccount setCurrentComponent={setCurrentComponent}/> :
+                            <PasswordReset /> 
                         }
  
                 </Col>
