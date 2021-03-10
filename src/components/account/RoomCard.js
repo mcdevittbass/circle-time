@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Col, Card, CardTitle, CardBody, Button, CardText, Row } from 'reactstrap';
+import { Col, Card, CardTitle, Button, CardText, Row } from 'reactstrap';
 import { FirebaseContext } from '../firebase/context';
 import DeleteModal from './DeleteModal';
 import ConfirmDelete from './ConfirmDelete';

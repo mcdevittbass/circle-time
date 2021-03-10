@@ -6,17 +6,30 @@ import Question from './Question';
 import { FirebaseContext } from '../firebase/context';
 
 //to do: set up dragging for keywords so that position persists on reload
-// let centerX = window.innerWidth/2;
-// let centerY = window.innerHeight/2;
+
+//later - see how to rerender stage when height and width change
 let stageWidth = window.innerWidth;
 let stageHeight = window.innerHeight;
 
-const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, questionText, roomId, wordIndex, setWordIndex, lastWords}) => {
+const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, questionText, roomId, wordIndex, setWordIndex, lastWords, doSpacebarEvent}) => {
   const [itemIndex, setItemIndex] = useState(0);
   const [randomNumbers, setRandomNumbers] = useState([]);
   const [stickCoords, setStickCoords] = useState({x: null, y: null});
+  // const [stageHeight, setStageHeight] = useState(window.innerHeight);
+  // const [stageWidth, setStageWidth] = useState(window.innerWidth);
 
   const firebase = useContext(FirebaseContext);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setStageHeight(window.innerHeight);
+  //     setStageWidth(window.innerWidth);
+  //     console.log('resized')
+  //   }
+  //   window.addEventListener('resize', handleResize);
+
+  //   return () => window.removeEventListener('resize', handleResize);
+  // })
   
   useEffect(() => {
     //useEffect fires after component mounts or updates
@@ -82,11 +95,11 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
           } else {
             firebase.room(roomId).update({randomArray: randomNumbers.filter(num => num !== randomNumbers[randomIndex])});
           }
-          console.log(randomNumbers[randomIndex]);
         };
         break;
       case " " || "Spacebar":
         event.preventDefault();  
+        if(!doSpacebarEvent) break;
         if(wordItems.length) {
           let newKeywordIndex;
           if(wordIndex <= wordItems.length && wordIndex >= 0) {

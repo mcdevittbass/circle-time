@@ -23,6 +23,7 @@ function Main({ authUser, roomId, setRoomId }) {
   const [questionText, setQuestionText] = useState('');
   const [wordIndex, setWordIndex] = useState(-1);
   const [lastWords, setLastWords] = useState([]);
+  const [doSpacebarEvent, setDoSpacebarEvent] = useState(true);
 
   const firebase = useContext(FirebaseContext);
 
@@ -181,6 +182,7 @@ function Main({ authUser, roomId, setRoomId }) {
                       roomId={roomId} 
                       setRoomId={setRoomId} 
                       roomParams={roomParams}
+                      setDoSpacebarEvent={setDoSpacebarEvent}
                     />
                 </Col>
             </Row>
@@ -198,6 +200,7 @@ function Main({ authUser, roomId, setRoomId }) {
                     wordIndex={wordIndex}
                     setWordIndex={setWordIndex}
                     lastWords={lastWords}
+                    doSpacebarEvent={doSpacebarEvent}
                 />
             </Row>
         </Container>

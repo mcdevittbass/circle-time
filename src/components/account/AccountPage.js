@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Row, Col, Button, Card, CardTitle, CardText } from 'reactstrap';
+import { Row, Col, Button, Card, CardTitle } from 'reactstrap';
 import { FirebaseContext } from '../firebase/context';
 import AuthError from '../auth/AuthError';
 import ChangePassword from '../auth/ChangePassword';
@@ -65,27 +65,23 @@ const AccountPage = ( { authUser, roomId, setRoomId }) => {
             {/*Button with modal to create room*/}
             <Row className='row p-4'>
                 <Col className='text-center p-0'>
-                    <ParamsForm authUser={authUser} setRoomId={setRoomId} roomParams={null}/>
+                    <ParamsForm authUser={authUser} setRoomId={setRoomId} roomParams={null} />
                 </Col>
             </Row>
 
             <Row>
                 <Card body className='text-center'>
                     <CardTitle><h5>My Rooms</h5></CardTitle>
-                    <CardText>
-                        <Row>
-                            <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='owned'/>
-                        </Row>
-                    </CardText>
+                    <Row>
+                        <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='owned'/>
+                    </Row>
                 </Card>
             </Row>
 
             <Row>
                 <Card body className='text-center'>
                     <CardTitle><h5>Rooms shared with me</h5></CardTitle>
-                    <CardText>
-                        <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='cohosted'/>
-                    </CardText>
+                    <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='cohosted'/>
                 </Card>
             </Row>
         </>

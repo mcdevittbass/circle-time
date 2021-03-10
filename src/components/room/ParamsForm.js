@@ -5,7 +5,7 @@ import { FirebaseContext } from '../firebase/context';
 import CSVUpload from './CSVUpload';
 
 
-const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
+const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEvent }) => {
     const [isModalOpen, setModal] = useState(false);
     const [buttonText, setButtonText] = useState('+ Create a Room');
     const [submitButtonText, setSubmitButtonText] = useState('Go to Room');
@@ -44,6 +44,15 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams }) => {
             setSubmitButtonText('Update Room');
         } 
     }, [roomParams, firebase])
+
+    useEffect(() => {
+        if(!roomParams) return; 
+        if(isModalOpen) {
+            setDoSpacebarEvent(false);
+        } else {
+            setDoSpacebarEvent(true);
+        }
+    }, [isModalOpen])
 
     const isInvalid = !title;
 
