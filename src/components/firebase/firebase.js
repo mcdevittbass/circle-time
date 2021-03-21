@@ -40,6 +40,8 @@ class Firebase {
 
     user = uid => this.db.ref(`users/${uid}`);
 
+    users = () => this.db.ref('users');
+
     room = roomId => this.db.ref(`rooms/${roomId}`);
 
     rooms = () => this.db.ref('rooms');
@@ -98,7 +100,6 @@ class Firebase {
         roomRef.update(params);
         (async () => {
             if(Object.keys(params.cohosts).length) {
-                console.log(params.cohosts);
                 for(let host in params.cohosts) {
                     console.log(host);
                     try {
@@ -115,6 +116,24 @@ class Firebase {
             }
 
         })();
+    }
+
+    //helper function to get userIds of cohosts
+    getCohosts = async (cohostArr, otherHosts) => {
+        console.log(cohostArr);
+        for(let cohost of cohostArr) {
+            try {
+                let ref = this.users();
+                const snap = await ref.orderByChild("email").equalTo(cohost).get();
+                const userRef = snap.val();
+                const userId = Object.keys(userRef)[0];
+                otherHosts[userId] = true;
+
+            } catch(err) {
+                console.error(err.message);
+            }
+        }; 
+        return otherHosts;
     }
 
 }

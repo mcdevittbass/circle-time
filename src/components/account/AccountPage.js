@@ -81,7 +81,9 @@ const AccountPage = ( { authUser, roomId, setRoomId }) => {
             <Row>
                 <Card body className='text-center'>
                     <CardTitle><h5>Rooms shared with me</h5></CardTitle>
-                    <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='cohosted'/>
+                    <Row>
+                        <RoomCard roomId={roomId} setRoomId={setRoomId} authUser={authUser} roomRelation='cohosted'/>
+                    </Row>
                 </Card>
             </Row>
         </>

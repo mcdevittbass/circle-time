@@ -109,30 +109,9 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
         toggleModal();
     }
 
-    //helper function to get userIds of cohosts
-    const getHosts = async (cohostArr, otherHosts) => {
-        for(let cohost of cohostArr) {
-            try {
-                const response = await 
-                    fetch(`https://circle-up-d44b8-default-rtdb.firebaseio.com/users.json?orderBy="email"&equalTo="${cohost}"&print=pretty`);
-                try {
-                    const data = await response.json();
-                    const host = Object.keys(data)[0];
-                    otherHosts[host] = true;
-                } catch(err) {
-                    console.error(err.message);
-                }
-            } catch(err) {
-                console.error(err.message);
-            }
-        }; 
-        return otherHosts;
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const cohostArr = cohosts.replaceAll(' ', '').split(',');
-        
         (async () => {
             const thisUser = authUser.uid;
             let otherHosts = {};
@@ -141,7 +120,8 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
             //get user id for each host
             if(cohosts) {
                 try {
-                    otherHosts = await getHosts(cohostArr, otherHosts);
+                    otherHosts = await firebase.getCohosts(cohostArr, otherHosts);
+                    if(otherHosts.error) otherHosts = {};
                 } catch(err) {
                     console.error(err);
                 }
@@ -171,7 +151,7 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
                 }
             } else {
                 try {
-                    firebase.updateRoom(roomId, params);
+                    await firebase.updateRoom(roomId, params);
                 } catch(err) {
                     console.error(err);
                 }      
