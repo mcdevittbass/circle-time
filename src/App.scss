@@ -1,0 +1,39 @@
+$primary: #84BCDA;
+$secondary: #020887;
+$main-font: 'Ubuntu', sans-serif;
+
+
+.account-header {
+  background-color: $primary;
+  color: $secondary;
+  font-family: $main-font;
+  font-size: 60px;
+}
+.hello {
+  margin: auto;
+  padding: 0.5em;
+  font-family: $main-font;
+}
+.instructions-card {
+  width: 75%;
+  margin: auto;
+  padding: 0;
+}
+.login-header {
+  font-family: $main-font;
+  background-color: $primary; 
+  padding: 10px;
+  margin: 5px;
+}
+.submit-button {
+  background-color: $secondary;
+}
+.title-text {
+  color: $secondary;
+}
+.test {
+  border: 2px solid black
+}
+
+
+

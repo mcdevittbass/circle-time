@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import FirebaseContextProvider from './components/firebase/context';
+
 
 ReactDOM.render(
-  <React.StrictMode>
+  <FirebaseContextProvider>
     <App />
-  </React.StrictMode>,
+  </FirebaseContextProvider>,
   document.getElementById('root')
 );
 

@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-konva';
-import feather from '../img/feather.png';
+import feather from '../../img/feather.png';
 
 const featherImage = new window.Image(150, 150);
 featherImage.src = feather;
 
-const Stick = (props) => {
+const Stick = ({ stickCoords }) => {
   const [isFeatherLoaded, setLoadFeather] = useState(false);
 
-  let stickCoordX = props.items.length ? props.items[props.itemIndex].x - 40 : null;
-  let stickCoordY = props.items.length ? props.items[props.itemIndex].y - 30 : null;
+  useEffect(() => {
+      //console.log('feather: ' + isFeatherLoaded);
+      if(featherImage.complete) setLoadFeather(true);
+  },[]);
 
   const handleFeatherLoad = () => {
     setLoadFeather(true);
-    console.log('feather: ' + isFeatherLoaded);
   }
 
   featherImage.onload = handleFeatherLoad;
@@ -26,8 +27,8 @@ const Stick = (props) => {
           draggable
           width={100}
           height={100}
-          x={stickCoordX}
-          y={stickCoordY} 
+          x={stickCoords ? stickCoords.x : null}
+          y={stickCoords ? stickCoords.y : null} 
         />)
       }
     </>
