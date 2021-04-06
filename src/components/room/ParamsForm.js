@@ -1,6 +1,7 @@
 import React, {useState, Fragment, useEffect, useContext} from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Label, Col, Button, Row, FormGroup, Modal, ModalBody, ModalHeader, FormText} from 'reactstrap';
+import FormFeedback from 'reactstrap/lib/FormFeedback';
 import { FirebaseContext } from '../firebase/context';
 import CSVUpload from './CSVUpload';
 
@@ -13,7 +14,8 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
     const [currentCenterImg, setCurrentCenterImg] = useState('plate');
     const [tempQ, setTempQ] = useState('');
     const [participantInputs, setParticipantInputs] = useState([{name: '', keyword: ''}]);
-    const [cohosts, setCohosts] = useState('');
+    const [cohosts, setCohosts] = useState(['']);
+    const [cohostValidation, setCohostValidation] = useState(cohosts.map(host => false));
 
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
@@ -37,7 +39,8 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
                             cohostEmails.push(email);
                         } 
                     }
-                    setCohosts(cohostEmails.join(', '));
+                    setCohosts(cohostEmails);
+                    setCohostValidation(cohostEmails.map(host => false));
                 })();
             }
             setButtonText('Update Room');
@@ -56,23 +59,35 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
 
     const isInvalid = !title;
 
-    const handleValueChange = (e) => {
+    const handleValueChange = async (e) => {
+        e.persist();
+        let value = e.target.value;
         switch(e.target.name) {
             case 'select':
-                setCurrentCenterImg(e.target.value);
+                setCurrentCenterImg(value);
                 break;
             case 'title':
-                setTitle(e.target.value);
+                setTitle(value);
                 break;
             case 'question':
-                setTempQ(e.target.value);
-                break;
-            case 'cohosts':
-                setCohosts(e.target.value);
+                setTempQ(value);
                 break;
             default:
                 console.log('Unexpected input: ' + e.target.name);
         }
+    }
+
+    const handleCohostChange = (e, index) => {
+        const cohostArr = [...cohosts];
+        cohostArr[index] = e.target.value;
+        setCohosts(cohostArr);
+    }
+
+    const handleDeleteCohost = index => {
+        const values = [...cohosts];
+        values.splice(index, 1);
+        setCohostValidation(values.map(host => false));
+        setCohosts(values);
     }
 
     const handleParticipantChange = (e, index) => {
@@ -85,10 +100,16 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
         setParticipantInputs(values); 
     }
 
-    const handleAddParticipant = () => {
-        const values = [...participantInputs];
-        values.push({name: '', keyword: ''});
-        setParticipantInputs(values);
+    const handleAddRow = (e) => {
+        if(e.target.name === 'add-cohost') {
+            const values = [...cohosts];
+            values.push('');
+            setCohosts(values);
+        } else {
+            const values = [...participantInputs];
+            values.push({name: '', keyword: ''});
+            setParticipantInputs(values);
+        }
     }
 
     const handleDeleteParticipant = index => {
@@ -104,21 +125,46 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
             setCurrentCenterImg('plate');
             setTempQ('');
             setParticipantInputs([{name: '', keyword: ''}]);
-            setCohosts('');
+            setCohosts(['']);
         }
         toggleModal();
     }
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const cohostArr = cohosts.replaceAll(' ', '').split(',');
+        let cohostArr = [];
+        try {
+            const emailVerifications = await firebase.verifyUsers(cohosts);
+            let cohostsGTG = true;
+            emailVerifications.forEach((emailObj, i) => {
+                console.log(emailObj)
+                if(emailObj.verified === false) {
+                    console.log(emailObj.email)
+                    //alert(`${emailObj.email} is not a registered user. Please check your spelling.`);
+                    const values = [...cohostValidation];
+                    values[i] = true;
+                    setCohostValidation(values);
+                    cohostsGTG = false;
+                }
+            })
+            
+            if(!cohostsGTG) return;
+            cohostArr = emailVerifications.map(obj => obj.email);
+            console.log(cohostArr);
+            setCohosts(cohostArr);
+        } catch(err) {
+            console.error(err);
+        }
+        
+
         (async () => {
             const thisUser = authUser.uid;
             let otherHosts = {};
             let params = {};
 
             //get user id for each host
-            if(cohosts) {
+            if(cohostArr.length) {
                 try {
                     otherHosts = await firebase.getCohosts(cohostArr, otherHosts);
                     if(otherHosts.error) otherHosts = {};
@@ -215,7 +261,7 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
                     </Row>
                     <Row className='form-group px-5 m-0'>
                         <FormGroup>
-                            <Label>Participants
+                            <Label>Participants</Label>
                             {participantInputs.map((participant, i) => {
                                 return (
                                     <Fragment key={`participant-${i}`}>
@@ -250,23 +296,37 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
                                     </Fragment> 
                                 )
                             })}
-                            <Button color='light' type='button' onClick={handleAddParticipant}> + </Button>
-                            </Label>
+                            <Button color='light' type='button' name='participants' onClick={handleAddRow}> + </Button>
                         </FormGroup>
                     </Row>
                     <Row className='form-group px-5 m-0'>
                         <FormGroup>
-                            <Label>Co-host(s)
-                                <Input 
-                                    placeholder='Co-host email addresses'
-                                    type='text' 
-                                    name='cohosts' 
-                                    id='cohosts'
-                                    value={cohosts}
-                                    onChange={handleValueChange}
-                                />
-                                <FormText>Enter emails addresses of current users, separated by commas.</FormText>
-                            </Label>
+                            <Label>Co-host(s)</Label>
+                                {cohosts.map((host, i) => {
+                                    return (
+                                        <Fragment key={'host-' + i}>
+                                            <Row className='form-group'>
+                                                <Col >
+                                                    <Input 
+                                                        placeholder='Co-host email addresses'
+                                                        type='text' 
+                                                        name='cohosts' 
+                                                        id='cohosts'
+                                                        value={host}
+                                                        invalid={cohostValidation[i]}
+                                                        onChange={(e) => handleCohostChange(e, i)}
+                                                    />
+                                                    <FormFeedback>{host} is not a registered user. Please check your spelling.</FormFeedback>
+                                                </Col>
+                                                <Col className='col-1'>
+                                                    <Button color='light' type='button' onClick={() => handleDeleteCohost(i)}> x </Button>
+                                                </Col>
+                                            </Row>
+                                        </Fragment>
+                                    )
+                                })}
+                                <Button color='light' type='button' name='add-cohost' onClick={handleAddRow}> + </Button>
+                    
                         </FormGroup>
                     </Row>
                     <Row className='form-group'>

@@ -22,7 +22,8 @@ const RoomCard = ({ roomId, setRoomId, authUser, roomRelation }) => {
                 let userRef = await firebase.user(authUser.uid);
                 let whichHost = roomRelation === 'owned' ? 'ownedRooms' : 'cohostedRooms';
                 userRef.on('value', async (snapshot) => {
-                    const roomsObj = snapshot.val()[whichHost];
+                    const val = snapshot.val();
+                    const roomsObj = val ? await snapshot.val()[whichHost] : null;
                     if(roomsObj) {
                         const roomsArr = [];
                         for(let room in roomsObj) {

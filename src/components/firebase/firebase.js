@@ -120,7 +120,6 @@ class Firebase {
 
     //helper function to get userIds of cohosts
     getCohosts = async (cohostArr, otherHosts) => {
-        console.log(cohostArr);
         for(let cohost of cohostArr) {
             try {
                 let ref = this.users();
@@ -135,6 +134,23 @@ class Firebase {
         }; 
         return otherHosts;
     }
+
+    verifyUsers = async (emailArr) => {
+        const emailVerifications = [];
+        
+        for(let email of emailArr) {
+            const snap = await this.users().orderByChild("email").equalTo(email).get();
+            if(snap.exists()) {
+                emailVerifications.push({email, verified: true});
+            } else {
+                emailVerifications.push({email, verified: false})
+            };
+        }
+
+        console.log(emailVerifications)
+        return emailVerifications;
+    }
+        
 
 }
 
