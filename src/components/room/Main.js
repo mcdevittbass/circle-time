@@ -67,15 +67,19 @@ function Main({ authUser, roomId, setRoomId }) {
 
   useEffect(() => {
     if(roomParams) {
-      const { centerImage, participants, keywords, question, lastWords } = roomParams;
+      const { centerImage, participants, keywords, question, lastWords, keywordIndex } = roomParams;
       setCenterImg(centerImage);
       if(participants) setNames(participants.map(obj => obj.name));
       if(keywords) {
-        const justWords = keywords.map(obj => obj.keyword);
+        const justWords = [];
+        for(let obj of keywords) {
+          if(obj.keyword) justWords.push(obj.keyword);
+        }
         if(JSON.stringify(justWords) !== JSON.stringify(words)) {
-          setWords(keywords.map(obj => obj.keyword));
+          setWords(justWords);
         }
       }
+      setWordIndex(keywordIndex);
       setLastWords(lastWords || []);
       setQuestionText(question);
     } else {
@@ -133,30 +137,50 @@ function Main({ authUser, roomId, setRoomId }) {
   };
 
   function setWordPostions(wordItemArr) {
-    const updated = wordItemArr.map((item, i) => {
-      //if word index is the current word, put it in the center
-      if (wordIndex === -1) { //if wordIndex is the default, put all words on the side
+    let updated = [...wordItemArr];
+    if (wordIndex === -1) { //if wordIndex is the default, put all words on the side
+      updated = wordItemArr.map((item, i)  => {
         item.x = 20;
         item.y = i*30;
-      } else if(wordIndex === i) {
-        item.x = centerX - 50;
-        item.y = centerY - 15;
-      } else {
-        // set the other words around the circle FIX THIS
-        let centerRadius = 140;
-        let length = wordItems.length;
-        let lastWordIndex = lastWords[i];
-        if(lastWordIndex !== undefined) {
-          let angle = (i/length)*Math.PI*2;
-          item.x = Math.cos(angle)*centerRadius + centerX - 40;
-          item.y = Math.sin(angle)*centerRadius + centerY;
-        } else {
-          item.x = 20;
-          item.y = i*30;
-        }
-      }
-      return item;
+      });
+      return updated;
+    }
+
+    updated[wordIndex].x = centerX - 50;
+    updated[wordIndex].y = centerY - 15;
+
+    lastWords.forEach(lastWord => {
+      let centerRadius = 140;
+      let length = wordItems.length;
+      let angle = (lastWord/length)*Math.PI*2;
+      updated[lastWord].x = Math.cos(angle)*centerRadius + centerX - 40;
+      updated[lastWord].y = Math.sin(angle)*centerRadius + centerY;
     });
+
+    // const updated = wordItemArr.map((item, i) => {
+    //   //if word index is the current word, put it in the center
+    //   if (wordIndex === -1) { //if wordIndex is the default, put all words on the side
+    //     item.x = 20;
+    //     item.y = i*30;
+    //   } else if(wordIndex === i) {
+    //     item.x = centerX - 50;
+    //     item.y = centerY - 15;
+    //   } else {
+    //     // set the other words around the circle
+    //     let centerRadius = 140;
+    //     let length = wordItems.length;
+    //     let lastWordIndex = lastWords[i];
+    //     if(lastWordIndex !== undefined) {
+    //       let angle = (i/length)*Math.PI*2;
+    //       item.x = Math.cos(angle)*centerRadius + centerX - 40;
+    //       item.y = Math.sin(angle)*centerRadius + centerY;
+    //     } else {
+    //       item.x = 20;
+    //       item.y = i*30;
+    //     }
+    //   }
+    //   return item;
+    // });
     return updated;
   }
 
