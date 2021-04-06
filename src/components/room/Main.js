@@ -67,15 +67,19 @@ function Main({ authUser, roomId, setRoomId }) {
 
   useEffect(() => {
     if(roomParams) {
-      const { centerImage, participants, keywords, question, lastWords } = roomParams;
+      const { centerImage, participants, keywords, question, lastWords, keywordIndex } = roomParams;
       setCenterImg(centerImage);
       if(participants) setNames(participants.map(obj => obj.name));
       if(keywords) {
-        const justWords = keywords.map(obj => obj.keyword);
+        const justWords = [];
+        for(let obj of keywords) {
+          if(obj.keyword) justWords.push(obj.keyword);
+        }
         if(JSON.stringify(justWords) !== JSON.stringify(words)) {
-          setWords(keywords.map(obj => obj.keyword));
+          setWords(justWords);
         }
       }
+      setWordIndex(keywordIndex);
       setLastWords(lastWords || []);
       setQuestionText(question);
     } else {
