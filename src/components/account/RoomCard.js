@@ -68,9 +68,7 @@ const RoomCard = ({ roomId, setRoomId, authUser, roomRelation }) => {
                 return;
             }
         }
-        //reset keyword and talking stick properties before opening again
-        firebase.room(room.key).update({lastWords: [], keywordIndex: -1, stickIndex: 0, randomArr: []});
-
+       
         setRoomId(room.key);
         history.push('/app');
     }

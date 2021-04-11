@@ -50,7 +50,7 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
             setSubmitButtonText('Update Room');
             setStickIndex(roomParams.stickIndex);
             setKeywordIndex(roomParams.keywordIndex);
-            setLastWords(roomParams.lastWords);
+            setLastWords(roomParams.lastWords ? roomParams.lastWords : []);
         } 
     }, [roomParams, firebase])
 
@@ -103,6 +103,7 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
         } else {
             values[index].keyword = e.target.value;
         }
+        console.log(values);
         setParticipantInputs(values); 
     }
 
