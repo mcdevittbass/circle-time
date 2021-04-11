@@ -23,6 +23,8 @@ function Main({ authUser, roomId, setRoomId }) {
   const [questionText, setQuestionText] = useState('');
   const [wordIndex, setWordIndex] = useState(-1);
   const [lastWords, setLastWords] = useState([]);
+  const [itemIndex, setItemIndex] = useState(0);
+  const [randomNumbers, setRandomNumbers] = useState([]);
   const [doSpacebarEvent, setDoSpacebarEvent] = useState(true);
 
   const firebase = useContext(FirebaseContext);
@@ -33,7 +35,6 @@ function Main({ authUser, roomId, setRoomId }) {
       const roomRef = await firebase.room(roomId);
       roomRef.on('value', async (snapshot) => {
         const roomData = await snapshot.val();
-        //console.log(roomData)
         setRoomParams(roomData);
       });
 
@@ -57,7 +58,8 @@ function Main({ authUser, roomId, setRoomId }) {
 
     //stop listening on unmount
     return () => {
-      console.log('component unmounted')
+      console.log('component unmounted');
+      
       if(roomId) {
         firebase.stopListeningToRoom(roomId);
       }
@@ -67,7 +69,7 @@ function Main({ authUser, roomId, setRoomId }) {
 
   useEffect(() => {
     if(roomParams) {
-      const { centerImage, participants, keywords, question, lastWords, keywordIndex } = roomParams;
+      const { centerImage, participants, keywords, question, lastWords, keywordIndex, randomArray } = roomParams;
       setCenterImg(centerImage);
       if(participants) setNames(participants.map(obj => obj.name));
       if(keywords) {
@@ -79,9 +81,12 @@ function Main({ authUser, roomId, setRoomId }) {
           setWords(justWords);
         }
       }
-      setWordIndex(keywordIndex);
       setLastWords(lastWords || []);
       setQuestionText(question);
+      const stickIndex = roomParams.stickIndex ? roomParams.stickIndex : 0;
+      setItemIndex(stickIndex);
+      setRandomNumbers(randomArray);
+      setWordIndex(keywordIndex);
     } else {
       console.log('Params was not truthy');
     }
@@ -99,7 +104,6 @@ function Main({ authUser, roomId, setRoomId }) {
   useEffect(() => {
     setWordItems(setWordPostions(initialWordItems));
   }, [initialWordItems])
-
  
   function setCirclePositions(shapeArr) {
     let parameterA = window.innerWidth*0.375;
@@ -130,57 +134,35 @@ function Main({ authUser, roomId, setRoomId }) {
     let word = {
       color: colorPalette[words.length % 8],
       text: newWord,
-      // x: 20,
-      // y: Math.random() * (window.innerHeight - 30)
     }
     return word;
   };
 
   function setWordPostions(wordItemArr) {
-    let updated = [...wordItemArr];
-    if (wordIndex === -1) { //if wordIndex is the default, put all words on the side
-      updated = wordItemArr.map((item, i)  => {
+    const updated = wordItemArr.map((item, i) => {
+      //if word index is the current word, put it in the center
+      if (wordIndex === -1) { //if wordIndex is the default, put all words on the side
         item.x = 20;
         item.y = i*30;
-      });
-      return updated;
-    }
-
-    updated[wordIndex].x = centerX - 50;
-    updated[wordIndex].y = centerY - 15;
-
-    lastWords.forEach(lastWord => {
-      let centerRadius = 140;
-      let length = wordItems.length;
-      let angle = (lastWord/length)*Math.PI*2;
-      updated[lastWord].x = Math.cos(angle)*centerRadius + centerX - 40;
-      updated[lastWord].y = Math.sin(angle)*centerRadius + centerY;
+      } else if(wordIndex === i) {
+        item.x = centerX - 50;
+        item.y = centerY - 15;
+      } else {
+        // set the other words around the circle
+        let centerRadius = 140;
+        let length = initialWordItems.length;
+        let lastWordIndex = lastWords[i];
+        if(lastWordIndex !== undefined) {
+          let angle = (i/length)*Math.PI*2;
+          item.x = Math.cos(angle)*centerRadius + centerX - 40;
+          item.y = Math.sin(angle)*centerRadius + centerY;
+        } else {
+          item.x = 20;
+          item.y = i*30;
+        }
+      }
+      return item;
     });
-
-    // const updated = wordItemArr.map((item, i) => {
-    //   //if word index is the current word, put it in the center
-    //   if (wordIndex === -1) { //if wordIndex is the default, put all words on the side
-    //     item.x = 20;
-    //     item.y = i*30;
-    //   } else if(wordIndex === i) {
-    //     item.x = centerX - 50;
-    //     item.y = centerY - 15;
-    //   } else {
-    //     // set the other words around the circle
-    //     let centerRadius = 140;
-    //     let length = wordItems.length;
-    //     let lastWordIndex = lastWords[i];
-    //     if(lastWordIndex !== undefined) {
-    //       let angle = (i/length)*Math.PI*2;
-    //       item.x = Math.cos(angle)*centerRadius + centerX - 40;
-    //       item.y = Math.sin(angle)*centerRadius + centerY;
-    //     } else {
-    //       item.x = 20;
-    //       item.y = i*30;
-    //     }
-    //   }
-    //   return item;
-    // });
     return updated;
   }
 
@@ -215,15 +197,15 @@ function Main({ authUser, roomId, setRoomId }) {
                     items={items} 
                     setItems={setItems} 
                     wordItems={wordItems} 
-                    setWordItems={setWordItems}
                     centerX={centerX} 
                     centerY={centerY} 
                     centerImg={centerImg}
                     questionText={questionText}
                     roomId={roomId}
                     wordIndex={wordIndex}
-                    setWordIndex={setWordIndex}
                     lastWords={lastWords}
+                    itemIndex={itemIndex}
+                    randomNumbers={randomNumbers}
                     doSpacebarEvent={doSpacebarEvent}
                 />
             </Row>

@@ -16,6 +16,9 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
     const [participantInputs, setParticipantInputs] = useState([{name: '', keyword: ''}]);
     const [cohosts, setCohosts] = useState(['']);
     const [cohostValidation, setCohostValidation] = useState(cohosts.map(host => false));
+    const [keywordIndex, setKeywordIndex] = useState(-1);
+    const [stickIndex, setStickIndex] = useState(0);
+    const [lastWords, setLastWords] = useState([]);
 
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
@@ -45,6 +48,9 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
             }
             setButtonText('Update Room');
             setSubmitButtonText('Update Room');
+            setStickIndex(roomParams.stickIndex);
+            setKeywordIndex(roomParams.keywordIndex);
+            setLastWords(roomParams.lastWords);
         } 
     }, [roomParams, firebase])
 
@@ -138,7 +144,6 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
             const emailVerifications = await firebase.verifyUsers(cohosts);
             let cohostsGTG = true;
             emailVerifications.forEach((emailObj, i) => {
-                console.log(emailObj)
                 if(emailObj.verified === false) {
                     console.log(emailObj.email)
                     //alert(`${emailObj.email} is not a registered user. Please check your spelling.`);
@@ -151,7 +156,6 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
             
             if(!cohostsGTG) return;
             cohostArr = emailVerifications.map(obj => obj.email);
-            console.log(cohostArr);
             setCohosts(cohostArr);
         } catch(err) {
             console.error(err);
@@ -182,10 +186,10 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
                 host: thisUser,
                 cohosts: otherHosts,
                 date: today,
-                stickIndex: 0,
+                stickIndex,
                 randomArray: [...Array(participantInputs.length).keys()],
-                keywordIndex: -1,
-                lastWords: []
+                keywordIndex,
+                lastWords
             }
             if(!roomParams) {
                 try{
@@ -234,7 +238,7 @@ const ParamsForm = ({ authUser, roomId, setRoomId, roomParams, setDoSpacebarEven
                     <Row className='form-group px-5 m-0'>
                         <FormGroup>
                             <Label>Center Image
-                                <Input type='select' name='select' id='img-select' defaultValue='Select Image' onChange={handleValueChange}>
+                                <Input type='select' name='select' id='img-select' defaultValue={currentCenterImg} onChange={handleValueChange}>
                                     <option value='plate'>Plate</option>
                                     <option value='candle'>Candle</option>
                                     <option value='empty'>No Image</option>

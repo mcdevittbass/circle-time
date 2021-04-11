@@ -11,9 +11,8 @@ import { FirebaseContext } from '../firebase/context';
 let stageWidth = window.innerWidth;
 let stageHeight = window.innerHeight;
 
-const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, questionText, roomId, wordIndex, setWordIndex, lastWords, doSpacebarEvent}) => {
-  const [itemIndex, setItemIndex] = useState(0);
-  const [randomNumbers, setRandomNumbers] = useState([]);
+const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
+    questionText, roomId, wordIndex, itemIndex, lastWords, randomNumbers, doSpacebarEvent }) => {
   const [stickCoords, setStickCoords] = useState({x: null, y: null});
   // const [stageHeight, setStageHeight] = useState(window.innerHeight);
   // const [stageWidth, setStageWidth] = useState(window.innerWidth);
@@ -40,28 +39,6 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
     }
   });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        firebase.room(roomId).on('value', async (snapshot) => {
-          const params = await snapshot.val();
-          if(params) {
-            const { randomArray, keywordIndex } = params;
-            const stickIndex = params.stickIndex ? params.stickIndex : 0;
-            setItemIndex(stickIndex);
-            setRandomNumbers(randomArray);
-            setWordIndex(keywordIndex);
-          } 
-        })
-      } catch(err) {
-        console.error(err);
-      }
-    })();
-    return () => {
-      firebase.room(roomId).child('stickIndex').off();
-    }
-    
-  }, [items, firebase, roomId])
 
   useEffect(() => {
     let stickCoordX = items.length ? items[itemIndex].x - 40 : null;
@@ -178,7 +155,8 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg, 
                       />
                   </Group>
               ))}
-              {wordItems.map((wordItem, i) => (
+              {wordItems.map((wordItem, i) => 
+              (
                 <Text 
                   text={wordItem.text}
                   fontFamily='Helvetica'
