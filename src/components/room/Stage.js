@@ -41,8 +41,8 @@ const CircleStage = ({ items, setItems, wordItems, centerX, centerY, centerImg,
 
 
   useEffect(() => {
-    let stickCoordX = items.length ? items[itemIndex].x - 40 : null;
-    let stickCoordY = items.length ? items[itemIndex].y - 30 : null;
+    let stickCoordX = items.length && items[itemIndex]?.x ? items[itemIndex].x - 40 : null;
+    let stickCoordY = items.length && items[itemIndex]?.y ? items[itemIndex].y - 30 : null;
     setStickCoords({x: stickCoordX, y: stickCoordY});
   }, [itemIndex, items])
 
