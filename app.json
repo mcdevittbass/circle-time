@@ -1,8 +1,3 @@
 {
-    "stack": "heroku-22",
-    "env": {
-        "NODE_VERSION": {
-            "description": "Ensure the app runs on a particular engine for compatibility with firebase"
-        }
-    }
+    "stack": "heroku-22"
 }
